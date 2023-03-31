@@ -1,6 +1,7 @@
-from ...otherFunc import clearScreen
-from ...numericals import integer
-from ...boolean import yesNo
+from ....otherFunc import clearScreen
+from ....numerical import integer
+from ....boolean import yesNo
+import termcolor
 
 
 def numeric(
@@ -24,7 +25,7 @@ def numeric(
             if cleanOnRefresh:
                 clearScreen.auto()
             if title != "":
-                print(f"\033[1;30;47m---{title}---\033[0;0m")
+                print(termcolor.colored(f"---{title}---", "black", "on_white"))
             serial = 0
             for arg in args:
                 if arg not in options and not showSelectedOnRefresh:
