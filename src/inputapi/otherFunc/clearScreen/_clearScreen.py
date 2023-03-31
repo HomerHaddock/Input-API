@@ -1,4 +1,4 @@
-import os
+import os as _os
 
 
 def auto():
@@ -11,7 +11,7 @@ def auto():
 
     No input required
     """
-    os.system("cls" if os.name == "nt" else "clear")
+    _os.system("cls" if _os.name == "nt" else "clear")
 
 
 def manual(OS: str):
@@ -28,9 +28,9 @@ def manual(OS: str):
     """
     OS = OS.lower()
     if OS == "windows":
-        os.system("cls")
+        _os.system("cls")
     elif OS == "macos" or OS == "linux":
-        os.system("clear")
+        _os.system("clear")
     else:
         raise OSError("Operating system incompatible")
 
