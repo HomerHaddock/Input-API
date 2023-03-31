@@ -1,4 +1,4 @@
-from .clearScreen import *
-from .pause import *
+from . import clearScreen, pause
 
-__all__ = clearScreen.__all__ + pause.__all__
+
+__all__ = [x for x in dir() if "_" not in x]
