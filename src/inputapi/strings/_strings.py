@@ -1,15 +1,16 @@
 from ..otherFunc import clearScreen
+import logging
 
 
 def newLineStr(
     request: str = "Input a string:",
+    *,
     minLength: int = 0,
-    maxLength: int = None,
-    allowOnly: str = None,
+    maxLength: int | None = None,
+    allowOnly: str | None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
 ) -> str:
-
     if clearOnLoad:
         clearScreen.auto()
 
@@ -17,29 +18,39 @@ def newLineStr(
         print(request)
 
     run = True
-    while run == True:
+    while run:
         user = input(">")
 
         error = False
         if len(user) < minLength:
             error = True
-            print(
-                f"ERROR: Too few characters, minimum amount is [{minLength}] characters, you entered [{len(user)}]"
+            logging.warning(
+                f"Input requires [{minLength}] characters or more, you entered [{len(user)}] characters"  # noqa: E501
             )
-        if len(user) > maxLength and maxLength != None:
-            error = True
-            print(
-                f"ERROR: Too many characters, maximum amount is [{maxLength}] characters, you entered [{len(user)}]"
-            )
-        if allowOnly != None:
+        if maxLength is not None:
+            if len(user) > maxLength:
+                error = True
+                logging.warning(
+                    f"Input requires [{maxLength}] characters or less, you entered [{len(user)}] characters"  # noqa: E501
+                )
+        if allowOnly is not None:
             for x in user:
                 if x not in allowOnly:
                     error = True
-                    print(
-                        f"ERROR: Invalid character [{x}], to ensure the program runs correctly please enter only these characters [{', '.join(x for  x in allowOnly)}]"
-                    )
+                    if len(allowOnly) < 20:
+                        logging.warning(
+                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly)}]"  # noqa: E501
+                        )
+                    elif len(allowOnly) > 25:
+                        logging.warning(
+                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {', '.join(x for x in allowOnly[-5:])}]"  # noqa: E501
+                        )
+                    else:
+                        logging.warning(
+                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {allowOnly[-1]}]"  # noqa: E501
+                        )
                     break
-        if error == False:
+        if error is False:
             run = False
 
     if clearWhenDone:
@@ -50,9 +61,10 @@ def newLineStr(
 
 def sameLineStr(
     request: str = "String=",
+    *,
     minLength: int = 0,
-    maxLength: int = None,
-    allowOnly: str = None,
+    maxLength: int | None = None,
+    allowOnly: str | None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
 ):
@@ -66,25 +78,37 @@ def sameLineStr(
         error = False
         if len(user) < minLength:
             error = True
-            print(
-                f"ERROR: Too few characters, minimum amount is [{minLength}] characters, you entered [{len(user)}]"
+            logging.warning(
+                f"Input requires [{minLength}] characters or more, you entered [{len(user)}] characters"  # noqa: E501
             )
-        if maxLength != None:
+        if maxLength is not None:
             if len(user) > maxLength:
                 error = True
-                print(
-                    f"ERROR: Too many characters, maximum amount is [{maxLength}] characters, you entered [{len(user)}]"
+                logging.warning(
+                    f"Input requires [{maxLength}] characters or less, you entered [{len(user)}] characters"  # noqa: E501
                 )
-        if allowOnly != None:
+        if allowOnly is not None:
             for x in user:
                 if x not in allowOnly:
                     error = True
-                    print(
-                        f"ERROR: Invalid character [{x}], to ensure the program runs correctly please enter only these characters [{', '.join(x for  x in allowOnly)}]"
-                    )
+                    if len(allowOnly) < 20:
+                        logging.warning(
+                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly)}]"  # noqa: E501
+                        )
+                    elif len(allowOnly) > 30:
+                        logging.warning(
+                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {', '.join(x for x in allowOnly[-5:])}]"  # noqa: E501
+                        )
+                    else:
+                        logging.warning(
+                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {allowOnly[-1]}]"  # noqa: E501
+                        )
                     break
-        if error == False:
+        if error is False:
             run = False
+
+    if clearWhenDone:
+        clearScreen.auto()
 
     return user
 
