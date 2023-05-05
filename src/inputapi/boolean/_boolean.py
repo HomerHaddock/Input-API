@@ -3,7 +3,7 @@ from ..strings import sameLineStr as _sameLineStr
 
 
 def yesNo(
-    request: str = "",
+    request: str = "Yes or no?",
     allowNumeric: bool = True,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
@@ -20,7 +20,7 @@ def yesNo(
 
     Returns:
         response: True means the user said Yes, False for No
-    """
+    """  # noqa: E501
 
     if clearOnLoad:
         _clearScreen()
@@ -34,7 +34,7 @@ def yesNo(
         allowedInput.append("1")
         allowedInput.append("2")
 
-    query = _sameLineStr("[Y/n]:", 1, 1, allowedInput)
+    query = _sameLineStr("[Y/n]:", minLength=1, maxLength=1, allowOnly=allowedInput)
 
     print()
 
