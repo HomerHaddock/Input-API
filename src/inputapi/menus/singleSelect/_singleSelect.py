@@ -1,24 +1,22 @@
 from ...otherFunc import clearScreen as _clearScreen
 from ...numerical.integer import newLineInt as _newLineInt
 from ...strings import newLineStr as _newLineStr
-import termcolor
 
 
 def numericSerial(
     *args, clearOnLoad: bool = False, clearWhenDone: bool = False, title: str = "Menu"
 ) -> int:
-
     if clearOnLoad:
         _clearScreen.auto()
 
     if title != "":
-        print(termcolor.colored(f"---{title}---", "black", "on_white"))
+        print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
 
     # All serials will begin at 1 and increase by 1 every loop (Sorta like a factory)
     serial = 1
     options = []
     for arg in args:
-        print(f"{serial}: {arg}")
+        print("%s: %s" % (serial, arg))
         options.append(serial)
         serial += 1
 
@@ -32,24 +30,23 @@ def numericSerial(
     if clearWhenDone:
         _clearScreen.auto()
 
-    return user
+    return user  # type: ignore
 
 
 def numericIndex(
     *args, clearOnLoad: bool = False, clearWhenDone: bool = False, title: str = "Menu"
 ) -> int:
-
     if clearOnLoad:
         _clearScreen.auto()
 
     if title != "":
-        print(termcolor.colored(f"---{title}---", "black", "on_white"))
+        print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
 
     # Instead of a serial number it will give it as an index
     index = 0
     options = []
     for arg in args:
-        print(f"{index}: {arg}")
+        print("%s: %s" % (index, arg))
         options.append(index)
         index += 1
 
@@ -63,13 +60,12 @@ def numericIndex(
     if clearWhenDone:
         _clearScreen.auto()
 
-    return user
+    return user # type: ignore
 
 
 def alphabetical(
     *args, clearOnLoad: bool = False, clearWhenDone: bool = False, title: str = "Menu"
 ) -> str:
-
     if clearOnLoad:
         _clearScreen.auto()
 
@@ -105,14 +101,14 @@ def alphabetical(
     index = [0]
 
     if title != "":
-        print(termcolor.colored(f"---{title}---", "black", "on_white"))
+        print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
 
     options = set()
     for arg in args:
         option = ""
         for i in index:
             option += letters[i]
-        print(f"{option}: {arg}")
+        print("%s: %s" % (option, arg))
         index[-1] += 1
         if index[-1] >= 26:
             for i in range(len(index), 0, -1):
@@ -129,14 +125,17 @@ def alphabetical(
     chosen = False
     while not chosen:
         user = _newLineStr(
-            "To select an option input the letters next to it:", 1, len(index), letters
+            "To select an option input the letters next to it:",
+            minLength=1,
+            maxLength=len(letters),
+            allowOnly=''.join(letters),
         ).capitalize()
         chosen = user in options
 
     if clearWhenDone:
         _clearScreen.auto()
 
-    return user
+    return user # type: ignore
 
 
 __all__ = ["numericSerial", "numericIndex", "alphabetical"]
