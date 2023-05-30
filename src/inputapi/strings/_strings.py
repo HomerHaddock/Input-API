@@ -2,6 +2,67 @@ from ..otherFunc import clearScreen
 import logging
 
 
+def allowedDisplayHandler(allowOnly: str) -> str:
+    length: int = len(allowOnly)
+    allowOnlyList:list = allowOnly.split("")
+
+    if length < 20:
+        string = '%s' % (allowOnlyList)
+        return string.replace("[", "").replace("]", "")
+    elif length > 25:
+        string = "%s ... %s" % (allowOnlyList[:20], allowOnlyList[-5:])
+        return string.replace("[", "").replace("]", "")
+    else:
+        string = "%s ... %s" % (allowOnlyList[:20], allowOnlyList[-1])
+        return string.replace("[", "").replace("]", "")
+
+def allowOnlyIterate(char:str, allowed:str)-> bool:
+
+    if char not in allowed:
+        logging.warning(
+                    "Input has invalid character [%s], allowed characters are [%s]" % (char, allowedDisplayHandler(allowed))  # noqa: E501
+                )
+        return False
+    return True
+
+def stringValidationCheck(
+    input: str,
+    minLength: int = 0,
+    maxLength: int | None = None,
+    allowOnly: str | None = None,
+) -> bool:
+    length: int = len(input)
+
+    message = dict()
+
+    if maxLength:
+        if length > maxLength:
+            message["limit"] = maxLength
+            message["boundaryHint"] = "less"
+            message["enteredLength"] = length
+    if minLength:
+        if length < minLength:
+            message["limit"] = minLength
+            message["boundaryHint"] = "more"
+            message["enteredLength"] = length
+
+    if len(message):
+        logging.warning(
+            "Input requires [%(limit)s] characters or %(boundaryHint)s, you entered [%(enteredLength)s] characters"  # noqa: E501
+            % message
+        )
+        return False
+    
+    allValid = True
+    if allowOnly:
+        for x in input:
+            valid = allowOnlyIterate(x, allowOnly)
+            allValid = valid and allValid
+                
+
+    return allValid
+
+
 def newLineStr(
     request: str = "Input a string:",
     *,
@@ -21,42 +82,16 @@ def newLineStr(
     while run:
         user = input(">")
 
-        error = False
-        if len(user) < minLength:
-            error = True
-            logging.warning(
-                f"Input requires [{minLength}] characters or more, you entered [{len(user)}] characters"  # noqa: E501
-            )
-        if maxLength is not None:
-            if len(user) > maxLength:
-                error = True
-                logging.warning(
-                    f"Input requires [{maxLength}] characters or less, you entered [{len(user)}] characters"  # noqa: E501
-                )
-        if allowOnly is not None:
-            for x in user:
-                if x not in allowOnly:
-                    error = True
-                    if len(allowOnly) < 20:
-                        logging.warning(
-                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly)}]"  # noqa: E501
-                        )
-                    elif len(allowOnly) > 25:
-                        logging.warning(
-                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {', '.join(x for x in allowOnly[-5:])}]"  # noqa: E501
-                        )
-                    else:
-                        logging.warning(
-                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {allowOnly[-1]}]"  # noqa: E501
-                        )
-                    break
-        if error is False:
+        valid = stringValidationCheck(user, minLength, maxLength, allowOnly)
+        if valid is True:
             run = False
+        else:
+            continue
 
     if clearWhenDone:
         clearScreen.auto()
 
-    return user
+    return user  # type: ignore
 
 
 def sameLineStr(
@@ -75,42 +110,16 @@ def sameLineStr(
     while run:
         user = input(request)
 
-        error = False
-        if len(user) < minLength:
-            error = True
-            logging.warning(
-                f"Input requires [{minLength}] characters or more, you entered [{len(user)}] characters"  # noqa: E501
-            )
-        if maxLength is not None:
-            if len(user) > maxLength:
-                error = True
-                logging.warning(
-                    f"Input requires [{maxLength}] characters or less, you entered [{len(user)}] characters"  # noqa: E501
-                )
-        if allowOnly is not None:
-            for x in user:
-                if x not in allowOnly:
-                    error = True
-                    if len(allowOnly) < 20:
-                        logging.warning(
-                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly)}]"  # noqa: E501
-                        )
-                    elif len(allowOnly) > 30:
-                        logging.warning(
-                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {', '.join(x for x in allowOnly[-5:])}]"  # noqa: E501
-                        )
-                    else:
-                        logging.warning(
-                            f"Input has invalid character [{x}], allowed characters are [{', '.join(x for x in allowOnly[:20])} ... {allowOnly[-1]}]"  # noqa: E501
-                        )
-                    break
-        if error is False:
+        valid = stringValidationCheck(user, minLength, maxLength, allowOnly)
+        if valid is True:
             run = False
+        else:
+            continue
 
     if clearWhenDone:
         clearScreen.auto()
 
-    return user
+    return user # type: ignore
 
 
 __all__ = ["newLineStr", "sameLineStr"]
