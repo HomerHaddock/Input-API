@@ -1,7 +1,8 @@
+import logging
 from ... import strings as _strings, otherFunc as _otherFunc
 
 
-def intStat(number: str) -> tuple[int]:
+def intStat(number: str) -> list[int]:
     neg = number.count("-")
     return [neg]
 
@@ -9,12 +10,11 @@ def intStat(number: str) -> tuple[int]:
 def newLineInt(
     request: str = "Input an integer:",
     allowNeg: bool = True,
-    min: int = None,
-    max: int = None,
+    min: int | None = None,
+    max: int | None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
 ):
-
     if clearOnLoad:
         _otherFunc.clearScreen.auto()
 
@@ -27,33 +27,35 @@ def newLineInt(
 
     minInput = 1
     maxInput = None
-    if max != None:
+    if max is not None:
         maxInput = len(str(max))
 
     followsMin = False
     followsMax = False
     followsNeg = False
     while not (followsMin and followsMax and followsNeg):
-        user = _strings.sameLineStr(">", minInput, maxInput, allow)
+        user = _strings.sameLineStr(
+            ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
+        )
         stat = intStat(user)
         user.replace("-", "")
         if stat[0] % 2 == 1:
             user = "-" + user
         user = int(user)
-        if min != None:
+        if min is not None:
             if user < min:
-                print(f"ERROR: Number [{user}] below minimum [{min}]")
+                logging.warning(f"Number [{user}] below minimum [{min}]")
                 continue
         followsMin = True
-        if max != None:
+        if max is not None:
             if user > max:
-                print(f"ERROR: Number [{user}] above maximum [{max}]")
+                logging.warning(f"Number [{user}] above maximum [{max}]")
                 continue
         followsMax = True
         if stat[0] % 2 == 1:
             if not allowNeg:
-                print(
-                    f"ERROR: Number [{user}] is negative, negative numbers are disabled for this input"
+                logging.warning(
+                    f"Number [{user}] is negative, negative numbers are disabled for this input"  # noqa: E501
                 )
                 continue
         followsNeg = True
@@ -61,18 +63,17 @@ def newLineInt(
     if clearWhenDone:
         _otherFunc.clearScreen.auto()
 
-    return user
+    return user # type: ignore
 
 
 def sameLineFloat(
     request: str = "Decimal=",
     allowNeg: bool = True,
-    min: float = None,
-    max: float = None,
+    min: float|None = None,
+    max: float|None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
 ) -> float:
-
     if clearOnLoad:
         _otherFunc.clearScreen.auto()
 
@@ -82,33 +83,35 @@ def sameLineFloat(
 
     minInput = 1
     maxInput = None
-    if max != None:
+    if max is not None:
         maxInput = len(str(max))
 
     followsMin = False
     followsMax = False
     followsNeg = False
     while not followsMin or not followsMax or not followsNeg:
-        user = _strings.sameLineStr(request, minInput, maxInput, allow)
+        user = _strings.sameLineStr(
+            ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
+        )
         stat = intStat(user)
         user.replace("-", "")
         if stat[0] % 2 == 1:
             user = "-" + user
         user = int(user)
-        if min != None:
+        if min is not None:
             if user < min:
-                print(f"ERROR: Number [{user}] below minimum [{min}]")
+                logging.warning(f"Number [{user}] below minimum [{min}]")
                 continue
         followsMin = True
-        if max != None:
+        if max is not None:
             if user > max:
-                print(f"ERROR: Number [{user}] above maximum [{max}]")
+                logging.warning(f"Number [{user}] above maximum [{max}]")
                 continue
         followsMax = True
         if stat[0] % 2 == 1:
             if not allowNeg:
-                print(
-                    f"ERROR: Number [{user}] is negative, negative numbers are disabled for this input"
+                logging.warning(
+                    f"Number [{user}] is negative, negative numbers are disabled for this input"  # noqa: E501
                 )
                 continue
         followsNeg = True
@@ -116,7 +119,7 @@ def sameLineFloat(
     if clearWhenDone:
         _otherFunc.clearScreen.auto()
 
-    return user
+    return user # type: ignore
 
 
 __add__ = ["newLineInt", "sameLineInt", "intStat"]
