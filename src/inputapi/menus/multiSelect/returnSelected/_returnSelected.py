@@ -1,7 +1,6 @@
 from ....otherFunc import clearScreen
 from ....numerical import integer
 from ....boolean import yesNo
-import termcolor
 
 
 def numeric(
@@ -25,7 +24,7 @@ def numeric(
             if cleanOnRefresh:
                 clearScreen.auto()
             if title != "":
-                print(termcolor.colored(f"---{title}---", "black", "on_white"))
+                print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
             serial = 0
             for arg in args:
                 if arg not in options and not showSelectedOnRefresh:
@@ -39,7 +38,7 @@ def numeric(
 
             print()
             selected = integer.newLineInt(
-                "Multiple selection menu\nTo select an option input the letters next to it:",
+                "Multiple selection menu\nTo select an option input the letters next to it:",  # noqa: E501
                 False,
                 0,
                 serial,
