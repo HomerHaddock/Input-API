@@ -28,13 +28,14 @@ def yesNo(
     if str != "":
         print(request)
 
-    allowedInput = ["y", "n"]
+    allowedInput = ["Y", "N", "y", "n"]
     if allowNumeric:
         print("Numeric response allowed (Y=1, n=2)")
         allowedInput.append("1")
         allowedInput.append("2")
 
-    query = _sameLineStr("[Y/n]:", minLength=1, maxLength=1, allowOnly=allowedInput)
+    query = _sameLineStr("[Y/n]:", minLength=1,
+                         maxLength=1, allowOnly=allowedInput)
 
     print()
 
