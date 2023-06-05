@@ -9,6 +9,7 @@ def intStat(number: str) -> list[int]:
 
 def newLineInt(
     request: str = "Input an integer:",
+    *,
     allowNeg: bool = True,
     min: int | None = None,
     max: int | None = None,
@@ -63,17 +64,18 @@ def newLineInt(
     if clearWhenDone:
         _otherFunc.clearScreen.auto()
 
-    return user # type: ignore
+    return user  # type: ignore
 
 
-def sameLineFloat(
-    request: str = "Decimal=",
+def sameLineInt(
+    request: str = "Integer=",
+    *,
     allowNeg: bool = True,
-    min: float|None = None,
-    max: float|None = None,
+    min: int | None = None,
+    max: int | None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
-) -> float:
+) -> int:
     if clearOnLoad:
         _otherFunc.clearScreen.auto()
 
@@ -119,7 +121,7 @@ def sameLineFloat(
     if clearWhenDone:
         _otherFunc.clearScreen.auto()
 
-    return user # type: ignore
+    return user  # type: ignore
 
 
 __add__ = ["newLineInt", "sameLineInt", "intStat"]
