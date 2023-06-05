@@ -8,7 +8,7 @@ def numeric(
     confirmChoice: bool = True,
     showSelectedOnRefresh: bool = True,
     clearOnLoad: bool = False,
-    cleanOnRefresh=False,
+    cleanOnRefresh: bool =False,
     clearWhenDone: bool = False,
     title: str = "Menu",
 ) -> list:
