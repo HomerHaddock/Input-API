@@ -4,7 +4,7 @@ import logging
 
 def allowedDisplayHandler(allowOnly: str) -> str:
     length: int = len(allowOnly)
-    allowOnlyList:list = allowOnly.split("")
+    allowOnlyList:list = list(allowOnly)
 
     if length < 20:
         string = '%s' % (allowOnlyList)
