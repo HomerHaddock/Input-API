@@ -35,9 +35,8 @@ def yesNo(
         allowedInput.append("2")
 
     query = _sameLineStr("[Y/n]:", minLength=1,
-                         maxLength=1, allowOnly=allowedInput)
+                         maxLength=1, allowOnly=''.join(allowedInput))
 
-    print()
 
     if clearWhenDone:
         _clearScreen()
