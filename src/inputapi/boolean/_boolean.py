@@ -4,6 +4,7 @@ from ..strings import sameLineStr as _sameLineStr
 
 def yesNo(
     request: str = "Yes or no?",
+    *,
     allowNumeric: bool = True,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
