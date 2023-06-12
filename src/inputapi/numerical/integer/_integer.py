@@ -8,12 +8,12 @@ def intHandle(input:str, allowNeg:bool, min:int|None, max:int|None) -> int|bool:
 
     inputInt:int = int(input)
     
-    if min:
+    if min is not None:
         if inputInt < min:
             logging.warning("Number [%s] below minimum [%s]" % (input, min))
             return False
     
-    if max:
+    if max is not None:
         if inputInt > max:
             logging.warning("Number [%s] above maximum [%s]" % (input, max))
             return False
