@@ -10,10 +10,10 @@ def allowedDisplayHandler(allowOnly: str) -> str:
         string = '%s' % (allowOnlyList)
         return string.replace("[", "").replace("]", "")
     elif length > 25:
-        string = "%s ... %s" % (allowOnlyList[:20], allowOnlyList[-5:])
+        string = "%s ... %s" % (allowOnlyList[:15], allowOnlyList[-5:])
         return string.replace("[", "").replace("]", "")
     else:
-        string = "%s ... %s" % (allowOnlyList[:20], allowOnlyList[-1])
+        string = "%s ... %s" % (allowOnlyList[:15], allowOnlyList[-1])
         return string.replace("[", "").replace("]", "")
 
 def allowOnlyIterate(char:str, allowed:str)-> bool:
@@ -58,6 +58,8 @@ def stringValidationCheck(
         for x in input:
             valid = allowOnlyIterate(x, allowOnly)
             allValid = valid and allValid
+            if not allValid:
+                break
                 
 
     return allValid
