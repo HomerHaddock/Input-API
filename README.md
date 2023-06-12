@@ -20,9 +20,26 @@
       - [1.3.2.1. newLineStr](#1321-newlinestr)
       - [1.3.2.2. sameLineStr](#1322-samelinestr)
       - [1.3.2.3. Error treatment and handling](#1323-error-treatment-and-handling)
-    - [Booleans](#booleans)
-      - [yesNo](#yesno)
-      - [Error treatment and handling](#error-treatment-and-handling)
+    - [1.3.3. Booleans](#133-booleans)
+      - [1.3.3.1. yesNo](#1331-yesno)
+      - [1.3.3.2. Error treatment and handling](#1332-error-treatment-and-handling)
+    - [1.3.4. Menus](#134-menus)
+      - [1.3.4.1. singleSelect menus](#1341-singleselect-menus)
+        - [1.3.4.1.1. numericSerial](#13411-numericserial)
+          - [1.3.4.1.1.1. Usage](#134111-usage)
+          - [1.3.4.1.1.2. Parameters](#134112-parameters)
+          - [1.3.4.1.1.3. Output](#134113-output)
+          - [1.3.4.1.1.4. Error treatment and handling](#134114-error-treatment-and-handling)
+        - [1.3.4.1.2. numericIndex](#13412-numericindex)
+          - [1.3.4.1.2.1. Usage](#134121-usage)
+          - [1.3.4.1.2.2. Parameters](#134122-parameters)
+          - [1.3.4.1.2.3. Output](#134123-output)
+          - [1.3.4.1.2.4. Error treatment and handling](#134124-error-treatment-and-handling)
+        - [1.3.4.1.3. alphabetical](#13413-alphabetical)
+          - [1.3.4.1.3.1. Usage](#134131-usage)
+          - [1.3.4.1.3.2. Parameters](#134132-parameters)
+          - [1.3.4.1.3.3. Output](#134133-output)
+          - [Error treatment and handling](#error-treatment-and-handling)
 
 ## 1.1. A Brief Description of Input API
 
@@ -318,9 +335,9 @@ while True:
 Strings were first introduced in Input API version 1.2.0 as newLineStr, got a bug fix in 1.2.1 (Like an hour after 1.2.0 got built).  
 Everything[^4] in the Input API is dependant on the string input since it gives more viability and ease of use. There are two types of string input and they are:
 
-| Type of input |                                                                        Best use case                                                                        |
-| :------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| newLineStr    |                                                            Small amount of inputs in succession                                                             |
+| Type of input |                                                                         Best use case                                                                         |
+| :------------ | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| newLineStr    |                                                             Small amount of inputs in succession                                                              |
 | sameLineStr   | Multiple inputs with each one after another, getting multiple strings, and replacing the character that sits left of the user input (`>`) with something else |
 
 #### 1.3.2.1. newLineStr
@@ -437,13 +454,13 @@ Please don't yell:
 WARNING: Input has invalid character [A], allowed characters are [b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u ... z]
 ```
 
-### Booleans
+### 1.3.3. Booleans
 
 The only boolean input there is is `yesNo` which is a boolean input that only allows for `y` or `n` as input. When input is given it will turn it into a boolean value (`True` or `False`).
 
 The Booleans best case use is for when you want to get a yes or no answer from the user. It is also used in the `confirm` input. (Refer to menus for more info about confirming input [Placeholder Link For Menus])
 
-#### yesNo
+#### 1.3.3.1. yesNo
 
 yesNo has two ways to be used:
 
@@ -482,14 +499,14 @@ Is your fridge running?
 ```
 
 The parameters for yesNo are:
-| Parameter     | data type | default        | Purpose                              |
+| Parameter | data type | default | Purpose |
 | :------------ | :-------- | :------------- | :----------------------------------- |
-| request       | string    | `'Yes or no?'` | Is displayed when requesting input   |
-| numeric       | boolean   | `True`         | Allows for numeric input (Y=1, n=2)  |
-| clearOnLoad   | boolean   | `False`        | Clears terminal before loading input |
-| clearWhenDone | boolean   | `False`        | Clears terminal after getting input  |
+| request | string | `'Yes or no?'` | Is displayed when requesting input |
+| allowNumeric | boolean | `True` | Allows for numeric input (Y=1, n=2) |
+| clearOnLoad | boolean | `False` | Clears terminal before loading input |
+| clearWhenDone | boolean | `False` | Clears terminal after getting input |
 
-#### Error treatment and handling
+#### 1.3.3.2. Error treatment and handling
 
 The errors in yesNo mainly happen through the sameLineStr but they are:
 
@@ -507,7 +524,203 @@ WARNING: Input requires [1] characters or less, you entered [15] characters
 
 Can you see me?
 [Y/n]:1
-WARNING: Input requires [1] characters or less, you entered [6] characters
+WARNING: Input has invalid character [1], allowed characters are ['Y', 'N', 'y', 'n']
+```
+
+### 1.3.4. Menus
+
+Menus allow the user to select a set of given options, there could be only one to select or multiple.
+
+#### 1.3.4.1. singleSelect menus
+
+These menus present multiple options but only allow the user to pick one. These can be used for the 'main hub' of a program to use other functions and return after. The returned value is the value assigned to the option.
+
+##### 1.3.4.1.1. numericSerial
+
+The numericSerial is the menu used in 1.X versions of Input API. All options are given a number from 1 to length of options given.
+
+###### 1.3.4.1.1.1. Usage
+
+Two ways to call and use this function.
+
+```python
+#The 1.X version of using the function
+import inputapi as inp
+
+inp.menu({params})
+```
+
+```python
+#The new way of using numericSerial
+import inputapi as inp
+
+inp.menus.singleSelect.numericSerial({params})
+```
+
+###### 1.3.4.1.1.2. Parameters
+
+The parameters of numericSerial are as follows:
+
+| Parameter     | data type | default    | purpose                                  |
+| :------------ | :-------- | :--------- | :--------------------------------------- |
+| *args         | Any       | No default | Options that are displayed to the user   |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output |
+| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input   |
+| title         | string    | `Menu`     | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+
+###### 1.3.4.1.1.3. Output
+
+The output of the numericSerial is:
+
+```python
+#An example of game option selection is
+
+#Note: Titles have a white background and black text
+#but cannot be rendered properly in markdown
+---Where do you go?---
+1: To the blazing inferno
+2: To the tree that reads books
+
+To select an option input the number assigned to it:
+>
+```
+
+###### 1.3.4.1.1.4. Error treatment and handling
+
+The errors of numericSerial is the [newLineInt error treatment hand handling](#13113-error-treatment-and-handling) with the following exception:
+
+```python
+#When giving a response not within the given options it will just ignore it
+
+---What animal do you prefer---
+1: Cat
+2: Dog
+
+To select an option input the number assigned to it:
+>3
+To select an option input the number assigned to it:
+>
+```
+
+##### 1.3.4.1.2. numericIndex
+
+The numericIndex menu is almost the same as [numericSerial](#13411-numericserial) with the exception that instead of starting at 1 instead it starts at 0.
+
+###### 1.3.4.1.2.1. Usage
+
+There is only one way to use numericIndex:
+
+```python
+import inputapi as inp
+
+inp.menus.singleSelect.numericIndex({params})
+```
+
+###### 1.3.4.1.2.2. Parameters
+
+The parameters of numericIndex are the same as [numericSerial](#134112-parameters):
+
+| Parameter     | data type | default    | purpose                                  |
+| :------------ | :-------- | :--------- | :--------------------------------------- |
+| *args         | Any       | No default | Options that are displayed to the user   |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output |
+| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input   |
+| title         | string    | `Menu`     | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+
+###### 1.3.4.1.2.3. Output
+
+This is what the menu would output when called:
+
+```python
+#Now lets show what a 'main hub' of a script could look like
+
+---Cool Math Program---
+0: Algebra
+1: Geometry
+2: Calculus
+3: Quit
+
+To select an option input the number assigned to it:
+>
+```
+
+###### 1.3.4.1.2.4. Error treatment and handling
+
+It's just the same as [numericSerial](#134114-error-treatment-and-handling).
+
+##### 1.3.4.1.3. alphabetical
+
+The alphabetical menu is the most unique of all singleSelect menus being that instead of using numbers as the selectable options it uses the Modern Latin Script (aka The English Alphabet).
+
+###### 1.3.4.1.3.1. Usage
+
+Only one way to use the function:
+
+```python
+import inputapi as inp
+
+inp.menus.singleSelect.alphabetical({params})
+```
+
+###### 1.3.4.1.3.2. Parameters
+
+The parameters are the same as [numericSerial and numericIndex](#134112-parameters):
+
+| Parameter     | data type | default    | purpose                                  |
+| :------------ | :-------- | :--------- | :--------------------------------------- |
+| *args         | Any       | No default | Options that are displayed to the user   |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output |
+| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input   |
+| title         | string    | `Menu`     | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+
+###### 1.3.4.1.3.3. Output
+
+The output of alphabetical is as follows:
+
+```python
+#This could be used for trivia questions
+#Also the correct statement is 'C'
+
+---Guess The Correct Statement---
+A: The plural word for octopus is octopi
+B: Luigi`s last name is Luigi since Mario`s is Mario
+C: In a State of the US it is illegal to wear a fake mustache to church if it makes someone laugh
+
+To select an option input the letters next to it:
+>
+```
+
+When given more options than character an additional character will be given:
+
+```python
+#I can't bother making something creative for this
+
+---Select One---
+A: Option 1
+B: Option 2
+C: Option 3
+...
+X: Option 24
+Y: Option 25
+Z: Option 26
+AA: Option 27
+```
+
+###### Error treatment and handling
+
+It is actually the same as [numericSerial](#134114-error-treatment-and-handling) with the following exception.
+
+```python
+#Since it uses different characters for input this is the message for invalid characters
+
+---What is the better number?---
+A: 1
+B: 2
+
+To select an option input the letters next to it:
+>1
+WARNING: Input has invalid character [1], allowed characters are ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' ... 'v', 'w', 'x', 'y', 'z']
+>
 ```
 
 [^1]:
