@@ -4,7 +4,10 @@ from ...strings import newLineStr as _newLineStr
 
 
 def numericSerial(
-    *args, clearOnLoad: bool = False, clearWhenDone: bool = False, title: str = "Menu"
+    *args,
+    clearOnLoad: bool = False,
+    clearWhenDone: bool = False,
+    title: str = "Menu"
 ) -> int:
     if clearOnLoad:
         _clearScreen.auto()
@@ -24,7 +27,8 @@ def numericSerial(
 
     chosen = False
     while not chosen:
-        user = _newLineInt("To select an option input the number assigned to it:")
+        user = _newLineInt(
+            "To select an option input the number assigned to it:")
         chosen = user in options
 
     if clearWhenDone:
@@ -34,7 +38,10 @@ def numericSerial(
 
 
 def numericIndex(
-    *args, clearOnLoad: bool = False, clearWhenDone: bool = False, title: str = "Menu"
+    *args,
+    clearOnLoad: bool = False,
+    clearWhenDone: bool = False,
+    title: str = "Menu"
 ) -> int:
     if clearOnLoad:
         _clearScreen.auto()
@@ -54,17 +61,21 @@ def numericIndex(
 
     chosen = False
     while not chosen:
-        user = _newLineInt("To select an option input the number assigned to it:")
+        user = _newLineInt(
+            "To select an option input the number assigned to it:")
         chosen = user in options
 
     if clearWhenDone:
         _clearScreen.auto()
 
-    return user # type: ignore
+    return user  # type: ignore
 
 
 def alphabetical(
-    *args, clearOnLoad: bool = False, clearWhenDone: bool = False, title: str = "Menu"
+    *args,
+    clearOnLoad: bool = False, 
+    clearWhenDone: bool = False,
+    title: str = "Menu"
 ) -> str:
     if clearOnLoad:
         _clearScreen.auto()
@@ -103,7 +114,7 @@ def alphabetical(
     if title != "":
         print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
 
-    options = set()
+    options = []
     for arg in args:
         option = ""
         for i in index:
@@ -111,14 +122,17 @@ def alphabetical(
         print("%s: %s" % (option, arg))
         index[-1] += 1
         if index[-1] >= 26:
-            for i in range(len(index), 0, -1):
-                if index[i - 1] >= 26 and i != 0:
-                    index[i - 1] = 0
-                    index[i - 2] += 1
-            if index[0] >= 26:
-                index[0] = 0
-                index.insert(0, 0)
-        options.add(option)
+            while max(index) >= 26:
+                if index[0] >= 26:
+                    index[0] = 0
+                    index.insert(0, 0)
+                for i,j in enumerate(index):
+                    if j >= 26:
+                        index[i] = 0
+                        index[i-1] += 1
+        if option in options:
+            raise ValueError('Fuck')
+        options.append(option)
 
     print()
 
@@ -128,14 +142,14 @@ def alphabetical(
             "To select an option input the letters next to it:",
             minLength=1,
             maxLength=len(letters),
-            allowOnly=''.join(letters),
-        ).capitalize()
+            allowOnly=''.join(letters) + ''.join([x.lower() for x in letters]),
+        ).upper()
         chosen = user in options
 
     if clearWhenDone:
         _clearScreen.auto()
 
-    return user # type: ignore
+    return user  # type: ignore
 
 
 __all__ = ["numericSerial", "numericIndex", "alphabetical"]
