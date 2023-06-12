@@ -3,10 +3,34 @@ from ...otherFunc import clearScreen
 import logging
 
 
-def floatStat(number: str) -> tuple[int, int]:
-    neg = number.count("-")
-    point = number.count(".")
-    return (neg, point)
+def floatHandle(
+    input: str, allowNeg: bool, min: float | None, max: float | None
+) -> float | bool:  # noqa: E501
+    
+    # Negative handler (e.g. --2 -> 2 or 2- -> -2)
+    negCount = input.count("-")
+    input = input.replace("-", "")
+    input = "-" + input if negCount % 2 else input
+    
+    # Decimal handler (e.g. 2.2.2 -> 2.220 or 2 -> 2.0)
+    inputSplit = input.split(".")
+    inputSplit.insert(1, ".")
+    inputSplit.append("0")
+    input = "".join(inputSplit)
+
+    inputFloat = float(input)
+
+    if min is not None:
+        if inputFloat < min:
+            logging.warning("Number [%s] is below minimum [%s]" % (input, min))
+            return False
+
+    if max is not None:
+        if inputFloat > max:
+            logging.warning("Number [%s] is above maximum [%s]" % (input, max))
+            return False
+
+    return inputFloat
 
 
 def newLineFloat(
@@ -32,39 +56,14 @@ def newLineFloat(
     if request != "":
         print(request)
 
-    followsMin = False
-    followsMax = False
-    followsNeg = False
-    while not followsMin or not followsMax or not followsNeg:
+    validInput = False
+    while validInput is not True:
         user = _strings.sameLineStr(
             ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
-        stat = floatStat(user)
-        user.replace("-", "")
-        if stat[0] % 2 == 1:
-            user = "-" + user
-        if stat[1] % 2 == 1:
-            split = user.split(".")
-            split.insert(1, ".")
-            user = "".join(split)
-        user = float(user)
-        if min is not None:
-            if user < min:
-                logging.warning(f"Number [{user}] below minimum [{min}]")
-                continue
-        followsMin = True
-        if max is not None:
-            if user > max:
-                logging.warning(f"Number [{user}] above maximum [{max}]")
-                continue
-        followsMax = True
-        if stat[0] % 2 == 1:
-            if not allowNeg:
-                logging.warning(
-                    f"Number [{user}] is negative, negative numbers are disabled for this input"  # noqa: E501
-                )
-                continue
-        followsNeg = True
+        if type(number:=floatHandle(user, allowNeg, min, max)) is float:
+            user = number
+            validInput = True
 
     if clearWhenDone:
         clearScreen.auto()
@@ -92,39 +91,14 @@ def sameLineFloat(
     if max is not None:
         maxInput = len(str(max))
 
-    followsMin = False
-    followsMax = False
-    followsNeg = False
-    while not followsMin or not followsMax or not followsNeg:
+    validInput = False
+    while validInput is not True:
         user = _strings.sameLineStr(
             request, minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
-        stat = floatStat(user)
-        user.replace("-", "")
-        if stat[0] % 2 == 1:
-            user = "-" + user
-        if stat[1] > 1:
-            split = user.split(".")
-            split.insert(1, ".")
-            user = "".join(split)
-        user = float(user)
-        if min is not None:
-            if user < min:
-                logging.warning(f"Number [{user}] below minimum [{min}]")
-                continue
-        followsMin = True
-        if max is not None:
-            if user > max:
-                logging.warning(f"Number [{user}] above maximum [{max}]")
-                continue
-        followsMax = True
-        if stat[0] % 2 == 1:
-            if not allowNeg:
-                logging.warning(
-                    f"Number [{user}] is negative, negative numbers are disabled for this input"  # noqa: E501
-                )
-                continue
-        followsNeg = True
+        if type(number:=floatHandle(user, allowNeg, min, max)) is float:
+            user = number
+            validInput = True
 
     if clearWhenDone:
         clearScreen.auto()
@@ -132,4 +106,4 @@ def sameLineFloat(
     return user
 
 
-__all__ = ["floatStat", "newLineFloat", "sameLineFloat"]
+__all__ = ["newLineFloat", "sameLineFloat"]
