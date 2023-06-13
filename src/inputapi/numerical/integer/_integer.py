@@ -1,4 +1,4 @@
-import logging
+import logging as _logging
 from ... import strings as _strings, otherFunc as _otherFunc
 
 def intHandle(input:str, allowNeg:bool, min:int|None, max:int|None) -> int|bool:
@@ -10,12 +10,12 @@ def intHandle(input:str, allowNeg:bool, min:int|None, max:int|None) -> int|bool:
     
     if min is not None:
         if inputInt < min:
-            logging.warning("Number [%s] below minimum [%s]" % (input, min))
+            _logging.warning("Number [%s] below minimum [%s]" % (input, min))
             return False
     
     if max is not None:
         if inputInt > max:
-            logging.warning("Number [%s] above maximum [%s]" % (input, max))
+            _logging.warning("Number [%s] above maximum [%s]" % (input, max))
             return False
     
     return inputInt
@@ -97,4 +97,4 @@ def sameLineInt(
     return user  # type: ignore
 
 
-__add__ = ["newLineInt", "sameLineInt"]
+__all__ = ["newLineInt", "sameLineInt"]
