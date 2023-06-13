@@ -3,7 +3,7 @@ from ....numerical import integer
 from ....boolean import yesNo
 
 
-def numeric(
+def numericSerial(
     *args,
     confirmChoice: bool = True,
     showSelectedOnRefresh: bool = True,
@@ -12,6 +12,23 @@ def numeric(
     clearWhenDone: bool = False,
     title: str = "Menu",
 ) -> list:
+    """numericSerial allows users to select multiple options
+
+    A menu that asks users to select multiple options then returns the values
+    (e.g. If a selected item was a list of floats then that is what is returned)
+    All values are given an serial starting at 1 and increasing as more options show.
+
+    Args:
+        confirmChoice (bool, optional): Asks the user if the selection is correct. Defaults to True.
+        showSelectedOnRefresh (bool, optional): Shows what the user has selected and hasn't. Defaults to True.
+        clearOnLoad (bool, optional): Clears terminal before displaying. Defaults to False.
+        cleanOnRefresh (bool, optional): Clears terminal on user selection. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal when finished. Defaults to False.
+        title (str, optional): Title to be displayed. Defaults to "Menu".
+
+    Returns:
+        list: The *args that were selected by the user
+    """  # noqa: E501
     
     if clearOnLoad:
         clearScreen.auto()
@@ -66,4 +83,4 @@ def numeric(
     return [x for x in args if x in options]  # type: ignore
 
 
-__all__ = ["numeric"]
+__all__ = ["numericSerial"]
