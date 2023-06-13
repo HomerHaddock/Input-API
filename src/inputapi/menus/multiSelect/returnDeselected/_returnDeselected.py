@@ -27,7 +27,7 @@ def numericSerial(
     Returns:
         list: All options not selected by user.
     """  # noqa: E501
-    
+
     if clearOnLoad:
         clearScreen.auto()
 
@@ -53,7 +53,7 @@ def numericSerial(
 
             print()
             selected = integer.newLineInt(
-                "Multiple selection menu\nTo select an option input the letters next to it:",  # noqa: E501
+                "Multiple selection menu\nTo select an option input the number next to it:",  # noqa: E501
                 False,
                 0,
                 serial,

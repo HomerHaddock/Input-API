@@ -58,7 +58,7 @@ def numericSerial(
 
             print()  # Creates space between the options and the input
             selected = integer.newLineInt(
-                "Multiple selection menu\nTo select an option input the letters next to it:",  # noqa: E501
+                "Multiple selection menu\nTo select an option input the number next to it:",  # noqa: E501
                 allowNeg = False,
                 min = 0,
                 max = serial,
