@@ -131,7 +131,7 @@ def alphabetical(
                         index[i] = 0
                         index[i-1] += 1
         if option in options:
-            raise ValueError('Fuck')
+            raise ValueError('Generated option was given pre-existant indentifier')
         options.append(option)
 
     print()
