@@ -3,10 +3,27 @@ from ....numerical import integer
 from ....boolean import yesNo
 
 
+def selectionHandler(
+    *args, selected: int, options: list, showSelectedOnRefresh: bool
+) -> list:
+    if not showSelectedOnRefresh:
+        options.pop(selected - 1)
+        return options
+
+    if args[selected - 1] in options:
+        index = options.index(args[selected - 1])
+        options.pop(index)
+    else:
+        options.insert(args[selected - 1])
+
+    return options
+
+
 def numericSerial(
     *args,
     confirmChoice: bool = True,
     showSelectedOnRefresh: bool = True,
+    allowNoSelection: bool = False,
     clearOnLoad: bool = False,
     cleanOnRefresh: bool = False,
     clearWhenDone: bool = False,
@@ -36,37 +53,54 @@ def numericSerial(
         options = list(args)
         selected = -1
         while selected != 0:
+            print()
             if cleanOnRefresh:
                 clearScreen.auto()
+
             if title != "":
                 print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
+
             serial = 0
             for arg in args:
                 if arg not in options and not showSelectedOnRefresh:
                     continue
                 serial += 1
                 if arg not in options:
-                    print(f"{serial}: *{arg}")
+                    print("%s: *%s" % (serial, arg))
                     continue
-                print(f"{serial}: {arg}")
+                print("%s: %s" % (serial, arg))
             print("0: Done")
 
-            print()
+            print()  # Creates space between the options and the input
             selected = integer.newLineInt(
                 "Multiple selection menu\nTo select an option input the number next to it:",  # noqa: E501
-                False,
-                0,
-                serial,
+                allowNeg=False,
+                min=0,
+                max=serial,
             )
             if selected != 0:
-                if args[selected - 1] in options and options != [args[selected - 1]]:
-                    index = options.index(args[selected - 1])
-                    options.pop(index)
-                elif showSelectedOnRefresh and args[selected - 1] not in options:
-                    options.insert(selected - 1, args[selected - 1])
+                options = selectionHandler(
+                    *args,
+                    selected=selected,
+                    options=options,
+                    showSelectedOnRefresh=showSelectedOnRefresh,
+                )
+
+            if not showSelectedOnRefresh and len(options) == 0:
+                selected = 0
+
+        if len(options) == len(args) and not allowNoSelection:
+            continue
+
         if confirmChoice:
+            print()
             confirmed = yesNo(
-                ", ".join(options) + "\nConfirm choice?", clearOnLoad=cleanOnRefresh
+                ("%s\nConfirm choice?" %
+                 ([i for i in args if i not in options]))
+                .replace("'", "")
+                .replace("[", "")
+                .replace("]", ""),
+                clearOnLoad=cleanOnRefresh,
             )
         else:
             confirmed = True
@@ -74,7 +108,7 @@ def numericSerial(
     if clearWhenDone:
         clearScreen.auto()
 
-    return [x for x in args if x not in options]
+    return [x for x in args if x in options]
 
 
 __all__ = ["numericSerial"]
