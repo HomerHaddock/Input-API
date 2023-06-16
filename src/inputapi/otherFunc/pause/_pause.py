@@ -31,7 +31,7 @@ def showValue(*values, clearOnLoad: bool = False, clearWhenDone: bool = False):
     """  # noqa: E501
     if clearOnLoad:
         clearScreen.auto()
-    print(*values)
+    print(*values, sep="\n")
     standard()
     if clearWhenDone:
         clearScreen.auto()
