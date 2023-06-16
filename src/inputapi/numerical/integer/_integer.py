@@ -28,7 +28,24 @@ def newLineInt(
     max: int | None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
-):
+) -> int:
+    """newLineInt requests an integer from the user on a newline
+
+    Asks the user for an integer on the line below `request` then turns it into an integer
+    what is returned is a valid integer with no errors.
+
+    Args:
+        request (str, optional): What you tell the user when requesting an integer. Defaults to "Input an integer:".
+        allowNeg (bool, optional): Allows negative integers as input. Defaults to True.
+        min (int | None, optional): The lowest number allowed (None means no min). Defaults to None.
+        max (int | None, optional): The largest number allowed (None means no max). Defaults to None.
+        clearOnLoad (bool, optional): Clears terminal before loading. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal after getting input. Defaults to False.
+
+    Returns:
+        int: The input given by the user
+    """  # noqa: E501
+    
     if clearOnLoad:
         _otherFunc.clearScreen.auto()
 
@@ -69,6 +86,22 @@ def sameLineInt(
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
 ) -> int:
+    """sameLineInt requests an integer on the same line as `request`
+
+    When asking for an integer the input will be on the same line as `request`
+    This input is best suited for more compact input.
+
+    Args:
+        request (str, optional): What the user will see when requesting input. Defaults to "Integer=".
+        allowNeg (bool, optional): Allows the user to enter a negative number. Defaults to True.
+        min (int | None, optional): The minimum number to be inputed (There will be no min if it's None). Defaults to None.
+        max (int | None, optional): The allowed maximum (if this is None there is no max). Defaults to None.
+        clearOnLoad (bool, optional): Clears terminal before requesting input. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal when user gives valid input. Defaults to False.
+
+    Returns:
+        int: The input given from the user
+    """  # noqa: E501
     if clearOnLoad:
         _otherFunc.clearScreen.auto()
 
