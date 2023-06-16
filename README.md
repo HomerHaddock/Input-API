@@ -39,7 +39,20 @@
           - [1.3.4.1.3.1. Usage](#134131-usage)
           - [1.3.4.1.3.2. Parameters](#134132-parameters)
           - [1.3.4.1.3.3. Output](#134133-output)
-          - [Error treatment and handling](#error-treatment-and-handling)
+          - [1.3.4.1.3.4. Error treatment and handling](#134134-error-treatment-and-handling)
+      - [1.3.4.2. multiSelect menus](#1342-multiselect-menus)
+        - [1.3.4.2.1. returnSelected menus](#13421-returnselected-menus)
+          - [1.3.4.2.1.1. numericSerial](#134211-numericserial)
+          - [1.3.4.2.1.2. Usage](#134212-usage)
+          - [1.3.4.2.1.3. Parameters](#134213-parameters)
+          - [1.3.4.2.1.4. Output](#134214-output)
+          - [1.3.4.2.1.5. Error treatment and handling](#134215-error-treatment-and-handling)
+        - [1.3.4.2.2. returnDeselected](#13422-returndeselected)
+          - [1.3.4.2.2.1. numericSerial](#134221-numericserial)
+          - [1.3.4.2.2.2. Usage](#134222-usage)
+          - [1.3.4.2.2.3. Parameters](#134223-parameters)
+          - [1.3.4.2.2.4. Output](#134224-output)
+          - [1.3.4.2.2.5. Error treatment and handling](#134225-error-treatment-and-handling)
 
 ## 1.1. A Brief Description of Input API
 
@@ -561,12 +574,12 @@ inp.menus.singleSelect.numericSerial({params})
 
 The parameters of numericSerial are as follows:
 
-| Parameter     | data type | default    | purpose                                  |
-| :------------ | :-------- | :--------- | :--------------------------------------- |
-| *args         | Any       | No default | Options that are displayed to the user   |
-| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output |
-| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input   |
-| title         | string    | `Menu`     | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+| Parameter     | data type | default    | purpose                                                                  |
+| :------------ | :-------- | :--------- | :----------------------------------------------------------------------- |
+| \*args        | Any       | No default | Options that are displayed to the user                                   |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output                                 |
+| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input                                   |
+| title         | string    | `'Menu'`   | What will be displayed as the name/purpose of the menu (`---{title}---`) |
 
 ###### 1.3.4.1.1.3. Output
 
@@ -620,12 +633,12 @@ inp.menus.singleSelect.numericIndex({params})
 
 The parameters of numericIndex are the same as [numericSerial](#134112-parameters):
 
-| Parameter     | data type | default    | purpose                                  |
-| :------------ | :-------- | :--------- | :--------------------------------------- |
-| *args         | Any       | No default | Options that are displayed to the user   |
-| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output |
-| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input   |
-| title         | string    | `Menu`     | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+| Parameter     | data type | default    | purpose                                                                  |
+| :------------ | :-------- | :--------- | :----------------------------------------------------------------------- |
+| \*args        | Any       | No default | Options that are displayed to the user                                   |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output                                 |
+| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input                                   |
+| title         | string    | `'Menu'`   | What will be displayed as the name/purpose of the menu (`---{title}---`) |
 
 ###### 1.3.4.1.2.3. Output
 
@@ -650,7 +663,7 @@ It's just the same as [numericSerial](#134114-error-treatment-and-handling).
 
 ##### 1.3.4.1.3. alphabetical
 
-The alphabetical menu is the most unique of all singleSelect menus being that instead of using numbers as the selectable options it uses the Modern Latin Script (aka The English Alphabet).
+The alphabetical menu is the most unique of all singleSelect menus being that instead of using numbers as the selectable options it uses the Modern Latin Alphabet (aka The English Alphabet).
 
 ###### 1.3.4.1.3.1. Usage
 
@@ -666,12 +679,12 @@ inp.menus.singleSelect.alphabetical({params})
 
 The parameters are the same as [numericSerial and numericIndex](#134112-parameters):
 
-| Parameter     | data type | default    | purpose                                  |
-| :------------ | :-------- | :--------- | :--------------------------------------- |
-| *args         | Any       | No default | Options that are displayed to the user   |
-| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output |
-| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input   |
-| title         | string    | `Menu`     | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+| Parameter     | data type | default    | purpose                                                                  |
+| :------------ | :-------- | :--------- | :----------------------------------------------------------------------- |
+| \*args        | Any       | No default | Options that are displayed to the user                                   |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before displaying output                                 |
+| clearWhenDone | boolean   | `False`    | Clears terminal after user gives input                                   |
+| title         | string    | `'Menu'`   | What will be displayed as the name/purpose of the menu (`---{title}---`) |
 
 ###### 1.3.4.1.3.3. Output
 
@@ -706,7 +719,7 @@ Z: Option 26
 AA: Option 27
 ```
 
-###### Error treatment and handling
+###### 1.3.4.1.3.4. Error treatment and handling
 
 It is actually the same as [numericSerial](#134114-error-treatment-and-handling) with the following exception.
 
@@ -722,6 +735,301 @@ To select an option input the letters next to it:
 WARNING: Input has invalid character [1], allowed characters are ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' ... 'v', 'w', 'x', 'y', 'z']
 >
 ```
+
+#### 1.3.4.2. multiSelect menus
+
+With multiSelect menus instead of only allowing one option to be selected you can select more than one, hence the name 'multiSelect' and 'singleSelect'.
+
+##### 1.3.4.2.1. returnSelected menus
+
+returnSelected menus return what was selected by the user.
+(Since the header limit is reached the one menu will have it's documentation outside of it's normal bounds)
+
+###### 1.3.4.2.1.1. numericSerial
+
+numericSerial has near same functionality as [singleSelect numericSerial](#13411-numericserial) except for a few changes to allow it to be multiSelect.
+
+###### 1.3.4.2.1.2. Usage
+
+The only menu there is has only one way to be used.
+
+```python
+import inputapi as inp
+
+inp.menus.multiSelect.returnSelected.numericSerial({params})
+```
+
+###### 1.3.4.2.1.3. Parameters
+
+The parameters for the multiSelect menu are:
+
+| Parameter             | data type | default    | purpose                                                                  |
+| :-------------------- | :-------- | :--------- | :----------------------------------------------------------------------- |
+| \*args                | Any       | No default | Options that are displayed to the user                                   |
+| confirmChoice         | boolean   | `True`     | Ensures that what the user selected was what they intended to select     |
+| showSelectedOnRefresh | boolean   | `True`     | Allows users to see what they selected (See Output for further detail)   |
+| allowNoSelection      | boolean   | `False`    | Allows the user to simply select nothing                                 |
+| clearOnLoad           | boolean   | `False`    | Clears terminal before displaying output                                 |
+| cleanOnRefresh        | boolean   | `False`    | Clears terminal when an option is selected                               |
+| clearWhenDone         | boolean   | `False`    | Clears terminal after user selects options                               |
+| title                 | string    | `'Menu'`   | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+
+###### 1.3.4.2.1.4. Output
+
+The output in a single state is almost identical to [numericSerial](#13411-numericserial) but the difference between selections is what will be documented.
+
+```python
+#For our first output we will have all values default
+#You can replecate this with
+#inp.menus.multiSelect.returnSelected.numericSerial('Option 1', 'Option 2', 'Option 3')
+
+---Menu---
+1: Option 1
+2: Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>1
+
+---Menu---
+1: *Option 1
+2: Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>2
+
+---Menu---
+1: *Option 1
+2: *Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>3
+
+---Menu---
+1: *Option 1
+2: *Option 2
+3: *Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>2
+
+---Menu---
+1: *Option 1
+2: Option 2
+3: *Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>0
+
+Option 1, Option 3
+Confirm choice?
+Numeric response allowed (Y=1, n=2)
+[Y/n]:1
+
+# This returned ['Option 1', 'Option 3']
+```
+
+But when showSelectedOnRefresh is `False` you get a different output.
+
+```python
+#This one will be recreated with
+#inp.menus.multiSelect.returnSelected.numericSerial('Option 1', 'Option 2', 'Option 3', showSelectedOnRefresh=False)
+
+---Menu---
+1: Option 1
+2: Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>1
+
+---Menu---
+1: *Option 1
+2: Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>2
+
+---Menu---
+1: *Option 1
+2: *Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>3
+
+---Menu---
+1: *Option 1
+2: *Option 2
+3: *Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>2
+
+---Menu---
+1: *Option 1
+2: Option 2
+3: *Option 3
+0: Done
+
+
+---Menu---
+1: Option 1
+2: Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>1
+
+---Menu---
+1: Option 2
+2: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>2
+
+---Menu---
+1: Option 2
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+
+---Menu---
+1: Option 1
+2: Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>1
+
+---Menu---
+1: Option 2
+2: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>2
+
+---Menu---
+1: Option 2
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>1
+
+Option 1, Option 2, Option 3
+Confirm choice?
+Numeric response allowed (Y=1, n=2)
+[Y/n]:y
+
+#This returned ['Option 1', 'Option 2', 'Option 3']
+```
+
+With showSelectedOnRefresh disabled it makes correcting errors more difficult and harder to select options but can remove the possibilities of selecting one option twice by accident. Also if all options are selected it will ask if you selected all options without you needing to select `Done`.
+
+###### 1.3.4.2.1.5. Error treatment and handling
+
+The only possible errors are the ones from both [newLineInt](#13113-error-treatment-and-handling) and [yesNo](#1332-error-treatment-and-handling) since they are what the user inputs through.
+
+##### 1.3.4.2.2. returnDeselected
+
+returnDeselected is almost the same as [returnSelected](#134211-numericserial) with the only difference being that instead of returning what the user selected it returns what the user **didn't** select.
+
+###### 1.3.4.2.2.1. numericSerial
+
+numericSerial assigns numbers to the options from 1 to the length of \*args.
+
+###### 1.3.4.2.2.2. Usage
+
+There is only one way to use this menu:
+
+```python
+import inputapi as inp
+
+inp.menus.multiSelect.returnDeselected.numericSerial({params})
+```
+
+###### 1.3.4.2.2.3. Parameters
+
+The parameters are identical to [returnSelected's parameters](#134213-parameters).
+
+| Parameter             | data type | default    | purpose                                                                  |
+| :-------------------- | :-------- | :--------- | :----------------------------------------------------------------------- |
+| \*args                | Any       | No default | Options that are displayed to the user                                   |
+| confirmChoice         | boolean   | `True`     | Ensures that what the user selected was what they intended to select     |
+| showSelectedOnRefresh | boolean   | `True`     | Allows users to see what they selected (See Output for further detail)   |
+| allowNoSelection      | boolean   | `False`    | Allows the user to simply select nothing                                 |
+| clearOnLoad           | boolean   | `False`    | Clears terminal before displaying output                                 |
+| cleanOnRefresh        | boolean   | `False`    | Clears terminal when an option is selected                               |
+| clearWhenDone         | boolean   | `False`    | Clears terminal after user selects options                               |
+| title                 | string    | `'Menu'`   | What will be displayed as the name/purpose of the menu (`---{title}---`) |
+
+###### 1.3.4.2.2.4. Output
+
+The output is identical to [returnSelected](#134214-output) where the output is the inverse.
+
+```python
+---Menu---
+1: Option 1
+2: Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>2
+
+---Menu---
+1: Option 1
+2: *Option 2
+3: Option 3
+0: Done
+
+Multiple selection menu
+To select an option input the number next to it:
+>0
+
+Option 2
+Confirm choice?
+Numeric response allowed (Y=1, n=2)
+[Y/n]:1
+
+#This returned ['Option 1', 'Option 3']
+```
+
+###### 1.3.4.2.2.5. Error treatment and handling
+
+Refer to [returnSelected](#134215-error-treatment-and-handling) for error treatment and handling.
 
 [^1]:
     clearScreen is does not need any information about the OS to work[^2]
