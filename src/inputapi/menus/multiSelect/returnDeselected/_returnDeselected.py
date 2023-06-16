@@ -14,7 +14,7 @@ def selectionHandler(
         index = options.index(args[selected - 1])
         options.pop(index)
     else:
-        options.insert(args[selected - 1])
+        options.insert(selected - 1, args[selected - 1])
 
     return options
 
