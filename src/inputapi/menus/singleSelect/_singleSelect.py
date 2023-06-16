@@ -9,6 +9,21 @@ def numericSerial(
     clearWhenDone: bool = False,
     title: str = "Menu"
 ) -> int:
+    """A menu for the single selection of a user
+
+    A list of options supplied through *args for the user to select.
+    Every option is given a number from 1 to length of *args.
+    What is returned is what the user selected.
+
+    Args:
+        clearOnLoad (bool, optional): Clears terminal before displaying. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal when finished. Defaults to False.
+        title (str, optional): The title displayed for the menu. Defaults to "Menu".
+
+    Returns:
+        int: What the user selected
+    """  # noqa: E501
+
     if clearOnLoad:
         _clearScreen.auto()
 
@@ -43,6 +58,21 @@ def numericIndex(
     clearWhenDone: bool = False,
     title: str = "Menu"
 ) -> int:
+    """numericIndex is a neumeric menu starting at 0
+
+    In similar fashion as menu and numericSerial this is a number based selection menu.
+    All options are given a number between 0 and length of *args minus 1.
+    What is returned is the number given to the option.
+
+    Args:
+        clearOnLoad (bool, optional): Clears terminal before displaying options. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal when finished. Defaults to False.
+        title (str, optional): The title to be displayed. Defaults to "Menu".
+
+    Returns:
+        int: The number to be assigned to the selected option
+    """  # noqa: E501
+    
     if clearOnLoad:
         _clearScreen.auto()
 
@@ -77,6 +107,24 @@ def alphabetical(
     clearWhenDone: bool = False,
     title: str = "Menu"
 ) -> str:
+    """alphabetical is a menu that assigns options with the Modern Latin Alphabet
+
+    This menu has the weird property of using only 26 characters from the Modern Latin Alphabet.
+    The characters are from A to Z and don't reach the limit of 26 options (Though too many options is ridiculous).
+    What is returned is the characters assigned to the option.
+
+    Args:
+        clearOnLoad (bool, optional): Clears terminal before starting. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal after getting valid input. Defaults to False.
+        title (str, optional): The name/title of the menu. Defaults to "Menu".
+
+    Raises:
+        ValueError: This will only happen if the assignment system for options has a heart attack and gives a duplicate.
+
+    Returns:
+        str: The characters assigned to an option.
+    """  # noqa: E501
+    
     if clearOnLoad:
         _clearScreen.auto()
 
