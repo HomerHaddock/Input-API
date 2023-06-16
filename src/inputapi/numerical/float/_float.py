@@ -35,12 +35,30 @@ def floatHandle(
 
 def newLineFloat(
     request: str = "Input an floating point number (Decimal):",
+    *,
     allowNeg: bool = True,
     min: float | int | None = None,
     max: float | int | None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
 ) -> float:
+    """newLineFloat inputs floating point number on a newline.
+
+    This input asks for a floating point number on the line below the request string.
+    It will ensure that what is returned is a valid number with no errors.
+
+    Args:
+        request (str, optional): The request or question of the values purpose. Defaults to "Input an floating point number (Decimal):".
+        allowNeg (bool, optional): Allows negative numbers without messing with min. Defaults to True.
+        min (float | int | None, optional): The lowest number that can be given (None means no min). Defaults to None.
+        max (float | int | None, optional): The highest number allowed (None means no max). Defaults to None.
+        clearOnLoad (bool, optional): Clears terminal before requesting input. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal after getting input. Defaults to False.
+
+    Returns:
+        float: The number that the user gave
+    """  # noqa: E501
+
     if clearOnLoad:
         clearScreen.auto()
 
@@ -73,12 +91,30 @@ def newLineFloat(
 
 def sameLineFloat(
     request: str = "Decimal=",
+    *,
     allowNeg: bool = True,
     min: float | int | None = None,
     max: float | int | None = None,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
 ) -> float:
+    """sameLineFloat asks the user for floating point number on the same line as request
+
+    This input works similar to newLineFloat but instead of having the input be on a new line
+    it will instead input on the same line as request for more compact input(s).
+
+    Args:
+        request (str, optional): The output to the user on what to input. Defaults to "Decimal=".
+        allowNeg (bool, optional): Allows negative numbers as input. Defaults to True.
+        min (float | int | None, optional): The lowest number allowed for input (None is no min). Defaults to None.
+        max (float | int | None, optional): The highest number allowed (None means no max). Defaults to None.
+        clearOnLoad (bool, optional): Clears terminal before requesting input. Defaults to False.
+        clearWhenDone (bool, optional): Clears terminal after getting input. Defaults to False.
+
+    Returns:
+        float: The input the user gave
+    """  # noqa: E501
+    
     if clearOnLoad:
         clearScreen.auto()
 
