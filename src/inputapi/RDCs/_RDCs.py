@@ -13,7 +13,7 @@ from ..otherFunc.clearScreen import auto as _auto
 def newLineRDC(
     *,
     clearOnLoad: bool = False,
-    clearOnRefresh: bool = True,
+    clearOnRefresh: bool = False,
     clearWhenDone: bool = False,
 ) -> float:
     """newLineRDC returns the radius of a circle given the radius, diameter, or circumference.
@@ -23,7 +23,7 @@ def newLineRDC(
 
     Args:
         clearOnLoad (bool, optional): Clears terminal before loading. Defaults to False.
-        clearOnRefresh (bool, optional): Clears terminal when switching inputs. Defaults to True.
+        clearOnRefresh (bool, optional): Clears terminal when switching inputs. Defaults to False.
         clearWhenDone (bool, optional): Clears terminal when finished. Defaults to False.
 
     Returns:
@@ -33,7 +33,9 @@ def newLineRDC(
     if clearOnLoad:
         _auto()
 
-    length = _newLineFloat("RDC:")
+    length = _newLineFloat("RDC:", clearOnLoad=clearOnLoad)
+
+    print()
 
     chosen = _singleSelect.numericSerial(
         "Radius",
@@ -55,7 +57,7 @@ def newLineRDC(
 def sameLineRDC(
     *,
     clearOnLoad: bool = False,
-    clearOnRefresh: bool = True,
+    clearOnRefresh: bool = False,
     clearWhenDone: bool = False,
 ) -> float:
     """sameLineRDC returns the radius of a circle given the radius, diameter, or circumference.
@@ -66,17 +68,20 @@ def sameLineRDC(
     
     Args:
         clearOnLoad (bool, optional): Clears terminal before loading. Defaults to False.
-        clearOnRefresh (bool, optional): Clears terminal when switching inputs. Defaults to True.
+        clearOnRefresh (bool, optional): Clears terminal when switching inputs. Defaults to False.
         clearWhenDone (bool, optional): Clears terminal when finished. Defaults to False.
     Returns:
         float: radius of a circle
     """  # noqa: E501
-    length = _sameLineFloat("RDC=")
+    length = _sameLineFloat("RDC=", clearOnLoad=clearOnLoad)
+
+    print()
+    
     chosen = _singleSelect.numericSerial(
         "Radius",
         "Diameter",
         "Circumference",
-        clearOnLoad=clearOnLoad,
+        clearOnLoad=clearOnRefresh,
         clearWhenDone=clearWhenDone,
         title="RDC",
     )
@@ -90,7 +95,10 @@ def sameLineRDC(
 
 
 def RDC(
-    length: float, *, clearOnLoad: bool = False, clearWhenDone: bool = False
+    length: float,
+    *,
+    clearOnLoad: bool = False,
+    clearWhenDone: bool = False,
 ) -> float:
     """RDC takes a radius, diameter, or circumference and returns the radius.
 
@@ -109,8 +117,8 @@ def RDC(
         TypeError: If length is not a float
     """  # noqa: E501
     
-    if not isinstance(length, float):
-        raise TypeError("length must be a float")
+    if not isinstance(length, (float, int)):
+        raise TypeError("length must be a float or int")
     
     chosen = _singleSelect.numericSerial(
         "Radius",
