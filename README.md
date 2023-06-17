@@ -53,6 +53,22 @@
           - [1.3.4.2.2.3. Parameters](#134223-parameters)
           - [1.3.4.2.2.4. Output](#134224-output)
           - [1.3.4.2.2.5. Error treatment and handling](#134225-error-treatment-and-handling)
+    - [1.3.5. RDCs](#135-rdcs)
+      - [1.3.5.1. RDC](#1351-rdc)
+        - [1.3.5.1.1. Usage](#13511-usage)
+        - [1.3.5.1.2. Parameters](#13512-parameters)
+        - [1.3.5.1.3. Output](#13513-output)
+        - [1.3.5.1.4. Error treatment and handling](#13514-error-treatment-and-handling)
+      - [1.3.5.2. newLineRDC](#1352-newlinerdc)
+        - [1.3.5.2.1. Usage](#13521-usage)
+        - [1.3.5.2.2. Parameters](#13522-parameters)
+        - [1.3.5.2.3. Output](#13523-output)
+        - [1.3.5.2.4. Error treatment and handling](#13524-error-treatment-and-handling)
+      - [1.3.5.3. sameLineRDC](#1353-samelinerdc)
+        - [1.3.5.3.1. Usage](#13531-usage)
+        - [1.3.5.3.2. Parameters](#13532-parameters)
+        - [1.3.5.3.3. Output](#13533-output)
+        - [1.3.5.3.4. Error treatment and handling](#13534-error-treatment-and-handling)
 
 ## 1.1. A Brief Description of Input API
 
@@ -1030,6 +1046,153 @@ Numeric response allowed (Y=1, n=2)
 ###### 1.3.4.2.2.5. Error treatment and handling
 
 Refer to [returnSelected](#134215-error-treatment-and-handling) for error treatment and handling.
+
+### 1.3.5. RDCs
+
+RDC (aka Radius Diameter Circumference) leans more on the mathematical part. RDC takes a Radius, Diameter, or Circumference of a circle and returns the radius.
+
+#### 1.3.5.1. RDC
+
+RDC was implemented in the 1.X versions of Input API, this is the most basic RDC in that you need another input for it to work.
+
+##### 1.3.5.1.1. Usage
+
+There are two ways to use RDC:
+
+```python
+#The 1.X way to use RDC
+import inputapi as inp
+
+inp.RDC({params})
+```
+
+```python
+#The new way to use RDC
+import inputapi as inp
+
+inp.RDCs.RDC({params})
+```
+
+##### 1.3.5.1.2. Parameters
+
+| Parameter     | data type | default    | purpose                             |
+| :------------ | :-------- | :--------- | :---------------------------------- |
+| length        | float     | No default | The value to be converted to radius |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before display      |
+| clearWhenDone | boolean   | `False`    | Clears terminal when converted      |
+
+##### 1.3.5.1.3. Output
+
+The only output RDC has is:
+
+```python
+---RDC---
+1: Radius
+2: Diameter
+3: Circumference
+
+To select an option input the number assigned to it:
+>
+```
+
+##### 1.3.5.1.4. Error treatment and handling
+
+All error treatment and handling is dealt by the [menu](#134114-error-treatment-and-handling) RDC uses. The only error that can happen is if length is not a number.
+
+#### 1.3.5.2. newLineRDC
+
+newLineRDC doesn't require you to input length, it will simply just request the length with [newLineFloat](#13121-newlinefloat-input) then returns radius.
+
+##### 1.3.5.2.1. Usage
+
+Only one way to use newLineRDC:
+
+```python
+import inputapi as inp
+
+inp.RDCs.newLineRDC({params})
+```
+
+##### 1.3.5.2.2. Parameters
+
+The parameters are:
+
+| Parameter      | data type | default | purpose                        |
+| :------------- | :-------- | :------ | :----------------------------- |
+| clearOnLoad    | boolean   | `False` | Clears terminal before display |
+| clearOnRefresh | boolean   | `False` | Clears terminal between inputs |
+| clearWhenDone  | boolean   | `False` | Clears terminal when converted |
+
+##### 1.3.5.2.3. Output
+
+The output for newLineRDC isn't much:
+
+```python
+#Let's do a radius of 5
+RDC:
+>5
+
+---RDC---
+1: Radius
+2: Diameter
+3: Circumference
+
+To select an option input the number assigned to it:
+>1
+
+# This returned 5.0
+```
+
+##### 1.3.5.2.4. Error treatment and handling
+
+The errors for newLineRDC are handled by [newLineFloat](#13123-error-treatment-and-handling) and [singleSelect's numericSerial](#134114-error-treatment-and-handling).
+
+#### 1.3.5.3. sameLineRDC
+
+sameLineRDC uses [sameLineFloat](#13122-samelinefloat) as the input instead of [newLineFloat](#13121-newlinefloat-input), this makes the input more compact and takes up less space for input.
+
+##### 1.3.5.3.1. Usage
+
+There is only one way to use sameLineRDC:
+
+```python
+import inputapi as inp
+
+inp.RDCs.sameLineRDC({params})
+```
+
+##### 1.3.5.3.2. Parameters
+
+These are the parameters for sameLineRDC:
+
+| Parameter      | data type | default | purpose                        |
+| :------------- | :-------- | :------ | :----------------------------- |
+| clearOnLoad    | boolean   | `False` | Clears terminal before display |
+| clearOnRefresh | boolean   | `False` | Clears terminal between inputs |
+| clearWhenDone  | boolean   | `False` | Clears terminal when converted |
+
+##### 1.3.5.3.3. Output
+
+The output for sameLineRDC is as follows:
+
+```python
+#Lets do a diameter of 26
+RDC=26
+
+---RDC---
+1: Radius
+2: Diameter
+3: Circumference
+
+To select an option input the number assigned to it:
+>2
+
+#This returned 13.0
+```
+
+##### 1.3.5.3.4. Error treatment and handling
+
+All possible errors happen through [sameLineFloat](#13123-error-treatment-and-handling) and [singleSelect's numericSerial](#134114-error-treatment-and-handling).
 
 [^1]:
     clearScreen is does not need any information about the OS to work[^2]
