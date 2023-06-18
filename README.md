@@ -69,6 +69,24 @@
         - [1.3.5.3.2. Parameters](#13532-parameters)
         - [1.3.5.3.3. Output](#13533-output)
         - [1.3.5.3.4. Error treatment and handling](#13534-error-treatment-and-handling)
+    - [1.3.6. otherFunc](#136-otherfunc)
+      - [1.3.6.1. pause](#1361-pause)
+        - [1.3.6.1.1. standard](#13611-standard)
+          - [1.3.6.1.1.1. Usage](#136111-usage)
+          - [1.3.6.1.1.2. Parameters](#136112-parameters)
+          - [1.3.6.1.1.3. Output](#136113-output)
+          - [1.3.6.1.1.4. Error treatment and handling](#136114-error-treatment-and-handling)
+        - [1.3.6.1.2. showValue](#13612-showvalue)
+          - [1.3.6.1.2.1. Usage](#136121-usage)
+          - [1.3.6.1.2.2. Parameters](#136122-parameters)
+          - [1.3.6.1.2.3. Error treatment and handling](#136123-error-treatment-and-handling)
+      - [1.3.6.2. clearScreen](#1362-clearscreen)
+        - [1.3.6.2.1. auto](#13621-auto)
+          - [1.3.6.2.1.1. Usage](#136211-usage)
+        - [1.3.6.2.2. manual](#13622-manual)
+          - [1.3.6.2.2.1. Usage](#136221-usage)
+          - [1.3.6.2.2.2. Parameters](#136222-parameters)
+          - [1.3.6.2.2.3. How to properly use manual](#136223-how-to-properly-use-manual)
 
 ## 1.1. A Brief Description of Input API
 
@@ -1193,6 +1211,161 @@ To select an option input the number assigned to it:
 ##### 1.3.5.3.4. Error treatment and handling
 
 All possible errors happen through [sameLineFloat](#13123-error-treatment-and-handling) and [singleSelect's numericSerial](#134114-error-treatment-and-handling).
+
+### 1.3.6. otherFunc
+
+otherFunc is what features the Input API has but isn't actually input. Just about all inputs require otherFunc to work just enough to keep afloat. You don't need to master this to actually be good at using Input API.
+
+#### 1.3.6.1. pause
+
+With pause it will stop the program until a user presses ENTER, this is really simple and is never used by any input.
+
+##### 1.3.6.1.1. standard
+
+standard is the first pause function and just pauses with no other noteworthy functionality.
+
+###### 1.3.6.1.1.1. Usage
+
+There are two ways to use standard:
+
+```python
+#This one actually makes sense
+import inputapi as inp
+
+inp.pause({params})
+```
+
+```python
+#The reimagined way
+import inputapi as inp
+
+inp.otherFunc.pause.standard({params})
+```
+
+###### 1.3.6.1.1.2. Parameters
+
+The parameters for standard is:
+
+| Parameter     | data type | default | purpose                        |
+| :------------ | :-------- | :------ | :----------------------------- |
+| clearOnLoad   | boolean   | `False` | Clears terminal before pausing |
+| clearWhenDone | boolean   | `False` | Clears terminal when resuming  |
+
+###### 1.3.6.1.1.3. Output
+
+The output is really lackluster:
+
+```python
+#Anything can be printed before pausing
+#If clearOnLoad is False
+Press ENTER to continue:
+```
+
+###### 1.3.6.1.1.4. Error treatment and handling
+
+If you can find an error that can only happen with standard... congrats at breaking the most simple function the Input API has.
+
+##### 1.3.6.1.2. showValue
+
+This works almost identical to [standard](#13611-standard) but allows you to print values while having clearOnLoad `True`.
+
+###### 1.3.6.1.2.1. Usage
+
+Only one way to use showValue:
+
+```python
+import inputapi as inp
+
+inp.otherFunc.pause.showValue({params})
+```
+
+###### 1.3.6.1.2.2. Parameters
+
+The parameters for showValue are:
+
+| Parameter     | data type | default    | purpose                             |
+| :------------ | :-------- | :--------- | :---------------------------------- |
+| \*values      | Any       | No default | The values to be displayed on pause |
+| clearOnLoad   | boolean   | `False`    | Clears terminal before pausing      |
+| clearWhenDone | boolean   | `False`    | Clears terminal when resuming       |
+
+###### 1.3.6.1.2.3. Error treatment and handling
+
+The errors that can happen are un-treatable and will break the script.
+
+#### 1.3.6.2. clearScreen
+
+clearScreen is the only part of Input API that is depended to the point of breaking. If clearScreen breaks then everything that wants to clear the terminal will break. clearScreen will only work with Windows, MacOS, and Linux based systems. Anything else is either lucky enough to be under the umbrella or incompatible entirely.
+
+##### 1.3.6.2.1. auto
+
+auto will clear the terminal while not needing info on the OS. It instead will ask Python through `os` to get info on the OS to use the right command to clear the terminal. This function has no parameters or errors, so you can just call it and nothing bad will happen.
+
+###### 1.3.6.2.1.1. Usage
+
+Two ways to use auto:
+
+```python
+#The original way
+import inputapi as inp
+
+inp.clearScreen()
+```
+
+```python
+#The way Input API uses auto
+
+inp.otherFunc.clearScreen.auto()
+```
+
+##### 1.3.6.2.2. manual
+
+manual clearScreen gives you the ability to clear the terminal for one OS and not all. Though MacOS and Linux based systems use the same command for their clearing, it's more allow Windows to clear or allow the other two to clear.
+
+###### 1.3.6.2.2.1. Usage
+
+Only one way to use manual:
+
+```python
+import inputapi as inp
+
+inp.otherFunc.clearScreen.manual({params})
+```
+
+###### 1.3.6.2.2.2. Parameters
+
+The parameter for manual is:
+
+| Parameter | data type | default    | purpose                             |
+| :-------- | :-------- | :--------- | :---------------------------------- |
+| OS        | string    | No default | What OS you want to be cleared |
+
+###### 1.3.6.2.2.3. How to properly use manual
+
+When calling the function you have to tell manual the name of the OS. While it requires the spelling to be correct, manual isn't case sensitive.
+
+```python
+#Lets go through every OS supported
+import inputapi as inp
+
+#This will make using manual easier to call
+manual = inp.otherFunc.clearScreen.manual
+
+#Windows
+manual(OS='Windows')
+
+#MacOS
+manual(OS='MACOS')
+
+#Linux based systems
+manual(OS='linux')
+
+#This will raise an error
+manual(OS='WindowsOS')
+
+#This too will raise an error
+manual()
+```
 
 [^1]:
     clearScreen is does not need any information about the OS to work[^2]
