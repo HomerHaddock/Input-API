@@ -2,6 +2,7 @@
 
 - [1. Input API](#1-input-api)
   - [1.1. A Brief Description of Input API](#11-a-brief-description-of-input-api)
+  - [Installing Input API](#installing-input-api)
   - [1.2. Basic Usage](#12-basic-usage)
     - [1.2.1. Numerical input](#121-numerical-input)
     - [1.2.2. Clearing the terminal](#122-clearing-the-terminal)
@@ -107,6 +108,26 @@ Input API is a python package made and maintained by Homer Haddock for the expre
 - Booleans
 - Strings
 - Menus
+
+## Installing Input API
+
+When receiving a copy of Input API you need to install it first, here is a short tutorial on how to install the Input API.
+
+1. Install Python (v3.7 or greater)
+2. Open the folder that has the .whl file for the Input API (e.g. `inputapi-2.0.0-py3-none-any.whl`)
+3. Open the .whl file with your Python installation (Not IDLE)
+4. Wait for the window to close
+5. Input API has been globally installed on your computer
+
+If you are using a virtual environment you just run.
+
+For Windows:
+
+`pip install Path/To/File.whl`
+
+For Linux:
+
+`python3 -m pip install Path/To/File.whl`
 
 ## 1.2. Basic Usage
 
@@ -1477,7 +1498,7 @@ There will be a new singleSelect menu type that will be exclusive to singleSelec
 
 #### 1.4.2.3. Adding A Changelog
 
-There will be a changelog that will list every change from 1.0.0 to the latest update. This will be publicly available to all distributions and to the GitHub repo.
+There will be a changelog that will list every change from 1.0.0 to the latest update. This will be publicly available to all distributions and to the GitHub repository.
 
 [^1]:
     clearScreen is does not need any information about the OS to work[^2]
