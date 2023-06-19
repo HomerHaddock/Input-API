@@ -87,6 +87,16 @@
           - [1.3.6.2.2.1. Usage](#136221-usage)
           - [1.3.6.2.2.2. Parameters](#136222-parameters)
           - [1.3.6.2.2.3. How to properly use manual](#136223-how-to-properly-use-manual)
+  - [1.4. TODO](#14-todo)
+    - [1.4.1. In Major Updates](#141-in-major-updates)
+      - [1.4.1.1. Pre-set Inputs](#1411-pre-set-inputs)
+      - [1.4.1.2. Iterable Inputs](#1412-iterable-inputs)
+      - [1.4.1.3. A Config Function](#1413-a-config-function)
+      - [1.4.1.4. Call later/repeat input](#1414-call-laterrepeat-input)
+    - [1.4.2. In Minor Updates](#142-in-minor-updates)
+      - [1.4.2.1. New multiSelect Menu Types](#1421-new-multiselect-menu-types)
+      - [1.4.2.2. New singleSelect Menu Type](#1422-new-singleselect-menu-type)
+      - [1.4.2.3. Adding A Changelog](#1423-adding-a-changelog)
 
 ## 1.1. A Brief Description of Input API
 
@@ -1366,6 +1376,108 @@ manual(OS='WindowsOS')
 #This too will raise an error
 manual()
 ```
+
+## 1.4. TODO
+
+This will be some things to expect to happen as Input API gets more updates. With some coming in the next major update, others in the minor updates.
+
+### 1.4.1. In Major Updates
+
+These will be added in the next major updates, some may appear in the same, others might be the only change.
+
+NOTE: These ideas are in no order whatsoever, any combination of when these will be added is possible
+
+#### 1.4.1.1. Pre-set Inputs
+
+Pre-set Inputs will be a way to have a series of inputs with the parameters set. A file with inputs could be read by the Input API and saved as a readable file or a compressed format to save on space. There will also be some built-in formats to make easier inputs too. This will be compatible with both older and more recent updates.
+
+```python
+import inputapi as inp
+
+#So instead of having something like this
+inp.numeric.newLineFloat('Gimmie a number:')
+inp.boolean.yesNo('Are you sure?')
+
+#You could
+fileInput = inp.presets.readFrom('/File.ext') #File extension will be given (.ext isn't it)
+fileInput.getNumber()
+
+#Or maybe
+inp.presets.number.intWithConfirm('Gimmie a number', 'Are you sure?') #This is not a guarantee to be added to presets (At least not in this exact way)
+```
+
+#### 1.4.1.2. Iterable Inputs
+
+This update will allow input for multiple elements of a list or array. This will allow multiple types of inputs in one.
+
+```python
+import inputapi as inp
+
+#This could be how the input could be used
+inp.iterables.list.newLineList()
+inp.iterables.tuple.sameLineTuple()
+inp.iterables.set.newLineSet()
+```
+
+#### 1.4.1.3. A Config Function
+
+This function will allow you to determine multiple factors throughout Input API, maybe relax some restrictions or make some more strict. More power will be given to you when receiving input when this comes to existence.
+
+```python
+import inputapi as inp
+
+#Could be this
+inp.config({params})
+
+#Maybe this
+inp.strings.config({params})
+
+#Or this
+inp.config.var = {Var}
+
+#There is some other things tht could be how config works but this is still possible
+```
+
+#### 1.4.1.4. Call later/repeat input
+
+This update will allow you to have a set of inputs within the script to be called over time and not when the line is read.
+
+```python
+import inputapi as inp
+
+#So instead of input being here
+inp.strings.newLineStr() #This is the input *function*
+
+#You could save it
+input = inp.strings.NewLineStr({params}) #This could be a class (Name is a placeholder)
+
+#Then call it later
+if __name__ == '__main__':
+  input()
+
+  #Or repeat the input
+  while True:
+    user = input()
+    print(user)
+    if user == 'Quit':
+      break
+```
+
+### 1.4.2. In Minor Updates
+
+These updates will be added between major updates or with them.
+
+#### 1.4.2.1. New multiSelect Menu Types
+
+There will be new multiSelect menu types for both returnSelected and returnDeselected. These types will be from the singleSelect menus.
+
+#### 1.4.2.2. New singleSelect Menu Type
+
+There will be a new singleSelect menu type that will be exclusive to singleSelect. This will have the same output as a multiSelect menu but won't let you select multiple.
+
+#### 1.4.2.3. Adding A Changelog
+
+There will be a changelog that will list every change from 1.0.0 to the latest update. This will be publicly available to all distributions and to the GitHub repo.
 
 [^1]:
     clearScreen is does not need any information about the OS to work[^2]
