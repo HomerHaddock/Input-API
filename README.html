@@ -1,0 +1,3809 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Input API README</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+      code[class*="language-"],
+      pre[class*="language-"] {
+        color: #333;
+        background: none;
+        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        text-align: left;
+        white-space: pre;
+        word-spacing: normal;
+        word-break: normal;
+        word-wrap: normal;
+        line-height: 1.4;
+
+        -moz-tab-size: 8;
+        -o-tab-size: 8;
+        tab-size: 8;
+
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+      }
+
+      /* Code blocks */
+      pre[class*="language-"] {
+        padding: 0.8em;
+        overflow: auto;
+        /* border: 1px solid #ddd; */
+        border-radius: 3px;
+        /* background: #fff; */
+        background: #f5f5f5;
+      }
+
+      /* Inline code */
+      :not(pre) > code[class*="language-"] {
+        padding: 0.1em;
+        border-radius: 0.3em;
+        white-space: normal;
+        background: #f5f5f5;
+      }
+
+      .token.comment,
+      .token.blockquote {
+        color: #969896;
+      }
+
+      .token.cdata {
+        color: #183691;
+      }
+
+      .token.doctype,
+      .token.punctuation,
+      .token.variable,
+      .token.macro.property {
+        color: #333;
+      }
+
+      .token.operator,
+      .token.important,
+      .token.keyword,
+      .token.rule,
+      .token.builtin {
+        color: #a71d5d;
+      }
+
+      .token.string,
+      .token.url,
+      .token.regex,
+      .token.attr-value {
+        color: #183691;
+      }
+
+      .token.property,
+      .token.number,
+      .token.boolean,
+      .token.entity,
+      .token.atrule,
+      .token.constant,
+      .token.symbol,
+      .token.command,
+      .token.code {
+        color: #0086b3;
+      }
+
+      .token.tag,
+      .token.selector,
+      .token.prolog {
+        color: #63a35c;
+      }
+
+      .token.function,
+      .token.namespace,
+      .token.pseudo-element,
+      .token.class,
+      .token.class-name,
+      .token.pseudo-class,
+      .token.id,
+      .token.url-reference .token.variable,
+      .token.attr-name {
+        color: #795da3;
+      }
+
+      .token.entity {
+        cursor: help;
+      }
+
+      .token.title,
+      .token.title .token.punctuation {
+        font-weight: bold;
+        color: #1d3e81;
+      }
+
+      .token.list {
+        color: #ed6a43;
+      }
+
+      .token.inserted {
+        background-color: #eaffea;
+        color: #55a532;
+      }
+
+      .token.deleted {
+        background-color: #ffecec;
+        color: #bd2c00;
+      }
+
+      .token.bold {
+        font-weight: bold;
+      }
+
+      .token.italic {
+        font-style: italic;
+      }
+
+      /* JSON */
+      .language-json .token.property {
+        color: #183691;
+      }
+
+      .language-markup .token.tag .token.punctuation {
+        color: #333;
+      }
+
+      /* CSS */
+      code.language-css,
+      .language-css .token.function {
+        color: #0086b3;
+      }
+
+      /* YAML */
+      .language-yaml .token.atrule {
+        color: #63a35c;
+      }
+
+      code.language-yaml {
+        color: #183691;
+      }
+
+      /* Ruby */
+      .language-ruby .token.function {
+        color: #333;
+      }
+
+      /* Markdown */
+      .language-markdown .token.url {
+        color: #795da3;
+      }
+
+      /* Makefile */
+      .language-makefile .token.symbol {
+        color: #795da3;
+      }
+
+      .language-makefile .token.variable {
+        color: #183691;
+      }
+
+      .language-makefile .token.builtin {
+        color: #0086b3;
+      }
+
+      /* Bash */
+      .language-bash .token.keyword {
+        color: #0086b3;
+      }
+
+      /* highlight */
+      pre[data-line] {
+        position: relative;
+        padding: 1em 0 1em 3em;
+      }
+      pre[data-line] .line-highlight-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: transparent;
+        display: block;
+        width: 100%;
+      }
+
+      pre[data-line] .line-highlight {
+        position: absolute;
+        left: 0;
+        right: 0;
+        padding: inherit 0;
+        margin-top: 1em;
+        background: hsla(24, 20%, 50%, 0.08);
+        background: linear-gradient(
+          to right,
+          hsla(24, 20%, 50%, 0.1) 70%,
+          hsla(24, 20%, 50%, 0)
+        );
+        pointer-events: none;
+        line-height: inherit;
+        white-space: pre;
+      }
+
+      pre[data-line] .line-highlight:before,
+      pre[data-line] .line-highlight[data-end]:after {
+        content: attr(data-start);
+        position: absolute;
+        top: 0.4em;
+        left: 0.6em;
+        min-width: 1em;
+        padding: 0 0.5em;
+        background-color: hsla(24, 20%, 50%, 0.4);
+        color: hsl(24, 20%, 95%);
+        font: bold 65%/1.5 sans-serif;
+        text-align: center;
+        vertical-align: 0.3em;
+        border-radius: 999px;
+        text-shadow: none;
+        box-shadow: 0 1px white;
+      }
+
+      pre[data-line] .line-highlight[data-end]:after {
+        content: attr(data-end);
+        top: auto;
+        bottom: 0.4em;
+      }
+      html body {
+        font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans,
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        background-color: #fff;
+        overflow: initial;
+        box-sizing: border-box;
+        word-wrap: break-word;
+      }
+      html body > :first-child {
+        margin-top: 0;
+      }
+      html body h1,
+      html body h2,
+      html body h3,
+      html body h4,
+      html body h5,
+      html body h6 {
+        line-height: 1.2;
+        margin-top: 1em;
+        margin-bottom: 16px;
+        color: #000;
+      }
+      html body h1 {
+        font-size: 2.25em;
+        font-weight: 300;
+        padding-bottom: 0.3em;
+      }
+      html body h2 {
+        font-size: 1.75em;
+        font-weight: 400;
+        padding-bottom: 0.3em;
+      }
+      html body h3 {
+        font-size: 1.5em;
+        font-weight: 500;
+      }
+      html body h4 {
+        font-size: 1.25em;
+        font-weight: 600;
+      }
+      html body h5 {
+        font-size: 1.1em;
+        font-weight: 600;
+      }
+      html body h6 {
+        font-size: 1em;
+        font-weight: 600;
+      }
+      html body h1,
+      html body h2,
+      html body h3,
+      html body h4,
+      html body h5 {
+        font-weight: 600;
+      }
+      html body h5 {
+        font-size: 1em;
+      }
+      html body h6 {
+        color: #5c5c5c;
+      }
+      html body strong {
+        color: #000;
+      }
+      html body del {
+        color: #5c5c5c;
+      }
+      html body a:not([href]) {
+        color: inherit;
+        text-decoration: none;
+      }
+      html body a {
+        color: #08c;
+        text-decoration: none;
+      }
+      html body a:hover {
+        color: #00a3f5;
+        text-decoration: none;
+      }
+      html body img {
+        max-width: 100%;
+      }
+      html body > p {
+        margin-top: 0;
+        margin-bottom: 16px;
+        word-wrap: break-word;
+      }
+      html body > ul,
+      html body > ol {
+        margin-bottom: 16px;
+      }
+      html body ul,
+      html body ol {
+        padding-left: 2em;
+      }
+      html body ul.no-list,
+      html body ol.no-list {
+        padding: 0;
+        list-style-type: none;
+      }
+      html body ul ul,
+      html body ul ol,
+      html body ol ol,
+      html body ol ul {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      html body li {
+        margin-bottom: 0;
+      }
+      html body li.task-list-item {
+        list-style: none;
+      }
+      html body li > p {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      html body .task-list-item-checkbox {
+        margin: 0 0.2em 0.25em -1.8em;
+        vertical-align: middle;
+      }
+      html body .task-list-item-checkbox:hover {
+        cursor: pointer;
+      }
+      html body blockquote {
+        margin: 16px 0;
+        font-size: inherit;
+        padding: 0 15px;
+        color: #5c5c5c;
+        background-color: #f0f0f0;
+        border-left: 4px solid #d6d6d6;
+      }
+      html body blockquote > :first-child {
+        margin-top: 0;
+      }
+      html body blockquote > :last-child {
+        margin-bottom: 0;
+      }
+      html body hr {
+        height: 4px;
+        margin: 32px 0;
+        background-color: #d6d6d6;
+        border: 0 none;
+      }
+      html body table {
+        margin: 10px 0 15px 0;
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: block;
+        width: 100%;
+        overflow: auto;
+        word-break: normal;
+        word-break: keep-all;
+      }
+      html body table th {
+        font-weight: bold;
+        color: #000;
+      }
+      html body table td,
+      html body table th {
+        border: 1px solid #d6d6d6;
+        padding: 6px 13px;
+      }
+      html body dl {
+        padding: 0;
+      }
+      html body dl dt {
+        padding: 0;
+        margin-top: 16px;
+        font-size: 1em;
+        font-style: italic;
+        font-weight: bold;
+      }
+      html body dl dd {
+        padding: 0 16px;
+        margin-bottom: 16px;
+      }
+      html body code {
+        font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+        font-size: 0.85em !important;
+        color: #000;
+        background-color: #f0f0f0;
+        border-radius: 3px;
+        padding: 0.2em 0;
+      }
+      html body code::before,
+      html body code::after {
+        letter-spacing: -0.2em;
+        content: "\00a0";
+      }
+      html body pre > code {
+        padding: 0;
+        margin: 0;
+        font-size: 0.85em !important;
+        word-break: normal;
+        white-space: pre;
+        background: transparent;
+        border: 0;
+      }
+      html body .highlight {
+        margin-bottom: 16px;
+      }
+      html body .highlight pre,
+      html body pre {
+        padding: 1em;
+        overflow: auto;
+        font-size: 0.85em !important;
+        line-height: 1.45;
+        border: #d6d6d6;
+        border-radius: 3px;
+      }
+      html body .highlight pre {
+        margin-bottom: 0;
+        word-break: normal;
+      }
+      html body pre code,
+      html body pre tt {
+        display: inline;
+        max-width: initial;
+        padding: 0;
+        margin: 0;
+        overflow: initial;
+        line-height: inherit;
+        word-wrap: normal;
+        background-color: transparent;
+        border: 0;
+      }
+      html body pre code:before,
+      html body pre tt:before,
+      html body pre code:after,
+      html body pre tt:after {
+        content: normal;
+      }
+      html body p,
+      html body blockquote,
+      html body ul,
+      html body ol,
+      html body dl,
+      html body pre {
+        margin-top: 0;
+        margin-bottom: 16px;
+      }
+      html body kbd {
+        color: #000;
+        border: 1px solid #d6d6d6;
+        border-bottom: 2px solid #c7c7c7;
+        padding: 2px 4px;
+        background-color: #f0f0f0;
+        border-radius: 3px;
+      }
+      @media print {
+        html body {
+          background-color: #fff;
+        }
+        html body h1,
+        html body h2,
+        html body h3,
+        html body h4,
+        html body h5,
+        html body h6 {
+          color: #000;
+          page-break-after: avoid;
+        }
+        html body blockquote {
+          color: #5c5c5c;
+        }
+        html body pre {
+          page-break-inside: avoid;
+        }
+        html body table {
+          display: table;
+        }
+        html body img {
+          display: block;
+          max-width: 100%;
+          max-height: 100%;
+        }
+        html body pre,
+        html body code {
+          word-wrap: break-word;
+          white-space: pre;
+        }
+      }
+      .markdown-preview {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .markdown-preview .pagebreak,
+      .markdown-preview .newpage {
+        page-break-before: always;
+      }
+      .markdown-preview pre.line-numbers {
+        position: relative;
+        padding-left: 3.8em;
+        counter-reset: linenumber;
+      }
+      .markdown-preview pre.line-numbers > code {
+        position: relative;
+      }
+      .markdown-preview pre.line-numbers .line-numbers-rows {
+        position: absolute;
+        pointer-events: none;
+        top: 1em;
+        font-size: 100%;
+        left: 0;
+        width: 3em;
+        letter-spacing: -1px;
+        border-right: 1px solid #999;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .markdown-preview pre.line-numbers .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+      }
+      .markdown-preview pre.line-numbers .line-numbers-rows > span:before {
+        content: counter(linenumber);
+        color: #999;
+        display: block;
+        padding-right: 0.8em;
+        text-align: right;
+      }
+      .markdown-preview .mathjax-exps .MathJax_Display {
+        text-align: center !important;
+      }
+      .markdown-preview:not([for="preview"]) .code-chunk .btn-group {
+        display: none;
+      }
+      .markdown-preview:not([for="preview"]) .code-chunk .status {
+        display: none;
+      }
+      .markdown-preview:not([for="preview"]) .code-chunk .output-div {
+        margin-bottom: 16px;
+      }
+      .markdown-preview .md-toc {
+        padding: 0;
+      }
+      .markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link {
+        display: inline;
+        padding: 0.25rem 0;
+      }
+      .markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p,
+      .markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div {
+        display: inline;
+      }
+      .markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link {
+        font-weight: 800;
+      }
+      .scrollbar-style::-webkit-scrollbar {
+        width: 8px;
+      }
+      .scrollbar-style::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: transparent;
+      }
+      .scrollbar-style::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: rgba(150, 150, 150, 0.66);
+        border: 4px solid rgba(150, 150, 150, 0.66);
+        background-clip: content-box;
+      }
+      html body[for="html-export"]:not([data-presentation-mode]) {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+      }
+      html
+        body[for="html-export"]:not([data-presentation-mode])
+        .markdown-preview {
+        position: relative;
+        top: 0;
+      }
+      @media screen and (min-width: 914px) {
+        html
+          body[for="html-export"]:not([data-presentation-mode])
+          .markdown-preview {
+          padding: 2em calc(50% - 457px + 2em);
+        }
+      }
+      @media screen and (max-width: 914px) {
+        html
+          body[for="html-export"]:not([data-presentation-mode])
+          .markdown-preview {
+          padding: 2em;
+        }
+      }
+      @media screen and (max-width: 450px) {
+        html
+          body[for="html-export"]:not([data-presentation-mode])
+          .markdown-preview {
+          font-size: 14px !important;
+          padding: 1em;
+        }
+      }
+      @media print {
+        html
+          body[for="html-export"]:not([data-presentation-mode])
+          #sidebar-toc-btn {
+          display: none;
+        }
+      }
+      html
+        body[for="html-export"]:not([data-presentation-mode])
+        #sidebar-toc-btn {
+        position: fixed;
+        bottom: 8px;
+        left: 8px;
+        font-size: 28px;
+        cursor: pointer;
+        color: inherit;
+        z-index: 99;
+        width: 32px;
+        text-align: center;
+        opacity: 0.4;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        #sidebar-toc-btn {
+        opacity: 1;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100%;
+        padding: 32px 0 48px 0;
+        font-size: 14px;
+        box-shadow: 0 0 4px rgba(150, 150, 150, 0.33);
+        box-sizing: border-box;
+        overflow: auto;
+        background-color: inherit;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc::-webkit-scrollbar {
+        width: 8px;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: transparent;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: rgba(150, 150, 150, 0.66);
+        border: 4px solid rgba(150, 150, 150, 0.66);
+        background-clip: content-box;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc
+        a {
+        text-decoration: none;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc {
+        padding: 0 16px;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper
+        .md-toc-link {
+        display: inline;
+        padding: 0.25rem 0;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper
+        .md-toc-link
+        p,
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper
+        .md-toc-link
+        div {
+        display: inline;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper.highlighted
+        .md-toc-link {
+        font-weight: 800;
+      }
+      html
+        body[for="html-export"]:not(
+          [data-presentation-mode]
+        )[html-show-sidebar-toc]
+        .markdown-preview {
+        left: 300px;
+        width: calc(100% - 300px);
+        padding: 2em calc(50% - 457px - 300px / 2);
+        margin: 0;
+        box-sizing: border-box;
+      }
+      @media screen and (max-width: 1274px) {
+        html
+          body[for="html-export"]:not(
+            [data-presentation-mode]
+          )[html-show-sidebar-toc]
+          .markdown-preview {
+          padding: 2em;
+        }
+      }
+      @media screen and (max-width: 450px) {
+        html
+          body[for="html-export"]:not(
+            [data-presentation-mode]
+          )[html-show-sidebar-toc]
+          .markdown-preview {
+          width: 100%;
+        }
+      }
+      html
+        body[for="html-export"]:not([data-presentation-mode]):not(
+          [html-show-sidebar-toc]
+        )
+        .markdown-preview {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      html
+        body[for="html-export"]:not([data-presentation-mode]):not(
+          [html-show-sidebar-toc]
+        )
+        .md-sidebar-toc {
+        display: none;
+      }
+      /* Please visit the URL below for more information: */
+      /*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+    </style>
+  </head>
+  <body for="html-export">
+    <div class="mume markdown-preview">
+      <h1 class="mume-header" id="1-input-api">1. Input API</h1>
+
+      <ul>
+        <li>
+          <a href="#1-input-api">1. Input API</a>
+          <ul>
+            <li>
+              <a href="#11-a-brief-description-of-input-api"
+                >1.1. A Brief Description of Input API</a
+              >
+            </li>
+            <li><a href="#installing-input-api">Installing Input API</a></li>
+            <li>
+              <a href="#12-basic-usage">1.2. Basic Usage</a>
+              <ul>
+                <li>
+                  <a href="#121-numerical-input">1.2.1. Numerical input</a>
+                </li>
+                <li>
+                  <a href="#122-clearing-the-terminal"
+                    >1.2.2. Clearing the terminal</a
+                  >
+                </li>
+                <li><a href="#123-boolean-input">1.2.3. Boolean input</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#13-advanced-usage">1.3. Advanced Usage</a>
+              <ul>
+                <li>
+                  <a href="#131-numbers">1.3.1. Numbers</a>
+                  <ul>
+                    <li>
+                      <a href="#1311-integers">1.3.1.1. Integers</a>
+                      <ul>
+                        <li>
+                          <a href="#13111-the-newlineint-input"
+                            >1.3.1.1.1. The newLineInt input</a
+                          >
+                        </li>
+                        <li>
+                          <a href="#13112-the-samelineint-input"
+                            >1.3.1.1.2. The sameLineInt input</a
+                          >
+                        </li>
+                        <li>
+                          <a href="#13113-error-treatment-and-handling"
+                            >1.3.1.1.3. Error treatment and handling</a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#1312-floating-point">1.3.1.2. Floating point</a>
+                      <ul>
+                        <li>
+                          <a href="#13121-newlinefloat-input"
+                            >1.3.1.2.1. newLineFloat input</a
+                          >
+                        </li>
+                        <li>
+                          <a href="#13122-samelinefloat"
+                            >1.3.1.2.2. sameLineFloat</a
+                          >
+                        </li>
+                        <li>
+                          <a href="#13123-error-treatment-and-handling"
+                            >1.3.1.2.3. Error treatment and handling</a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#132-strings">1.3.2. Strings</a>
+                  <ul>
+                    <li><a href="#1321-newlinestr">1.3.2.1. newLineStr</a></li>
+                    <li>
+                      <a href="#1322-samelinestr">1.3.2.2. sameLineStr</a>
+                    </li>
+                    <li>
+                      <a href="#1323-error-treatment-and-handling"
+                        >1.3.2.3. Error treatment and handling</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#133-booleans">1.3.3. Booleans</a>
+                  <ul>
+                    <li><a href="#1331-yesno">1.3.3.1. yesNo</a></li>
+                    <li>
+                      <a href="#1332-error-treatment-and-handling"
+                        >1.3.3.2. Error treatment and handling</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#134-menus">1.3.4. Menus</a>
+                  <ul>
+                    <li>
+                      <a href="#1341-singleselect-menus"
+                        >1.3.4.1. singleSelect menus</a
+                      >
+                      <ul>
+                        <li>
+                          <a href="#13411-numericserial"
+                            >1.3.4.1.1. numericSerial</a
+                          >
+                          <ul>
+                            <li>
+                              <a href="#134111-usage">1.3.4.1.1.1. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#134112-parameters"
+                                >1.3.4.1.1.2. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#134113-output">1.3.4.1.1.3. Output</a>
+                            </li>
+                            <li>
+                              <a href="#134114-error-treatment-and-handling"
+                                >1.3.4.1.1.4. Error treatment and handling</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#13412-numericindex"
+                            >1.3.4.1.2. numericIndex</a
+                          >
+                          <ul>
+                            <li>
+                              <a href="#134121-usage">1.3.4.1.2.1. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#134122-parameters"
+                                >1.3.4.1.2.2. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#134123-output">1.3.4.1.2.3. Output</a>
+                            </li>
+                            <li>
+                              <a href="#134124-error-treatment-and-handling"
+                                >1.3.4.1.2.4. Error treatment and handling</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#13413-alphabetical"
+                            >1.3.4.1.3. alphabetical</a
+                          >
+                          <ul>
+                            <li>
+                              <a href="#134131-usage">1.3.4.1.3.1. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#134132-parameters"
+                                >1.3.4.1.3.2. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#134133-output">1.3.4.1.3.3. Output</a>
+                            </li>
+                            <li>
+                              <a href="#134134-error-treatment-and-handling"
+                                >1.3.4.1.3.4. Error treatment and handling</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#1342-multiselect-menus"
+                        >1.3.4.2. multiSelect menus</a
+                      >
+                      <ul>
+                        <li>
+                          <a href="#13421-returnselected-menus"
+                            >1.3.4.2.1. returnSelected menus</a
+                          >
+                          <ul>
+                            <li>
+                              <a href="#134211-numericserial"
+                                >1.3.4.2.1.1. numericSerial</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#134212-usage">1.3.4.2.1.2. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#134213-parameters"
+                                >1.3.4.2.1.3. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#134214-output">1.3.4.2.1.4. Output</a>
+                            </li>
+                            <li>
+                              <a href="#134215-error-treatment-and-handling"
+                                >1.3.4.2.1.5. Error treatment and handling</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#13422-returndeselected"
+                            >1.3.4.2.2. returnDeselected</a
+                          >
+                          <ul>
+                            <li>
+                              <a href="#134221-numericserial"
+                                >1.3.4.2.2.1. numericSerial</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#134222-usage">1.3.4.2.2.2. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#134223-parameters"
+                                >1.3.4.2.2.3. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#134224-output">1.3.4.2.2.4. Output</a>
+                            </li>
+                            <li>
+                              <a href="#134225-error-treatment-and-handling"
+                                >1.3.4.2.2.5. Error treatment and handling</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#135-rdcs">1.3.5. RDCs</a>
+                  <ul>
+                    <li>
+                      <a href="#1351-rdc">1.3.5.1. RDC</a>
+                      <ul>
+                        <li><a href="#13511-usage">1.3.5.1.1. Usage</a></li>
+                        <li>
+                          <a href="#13512-parameters">1.3.5.1.2. Parameters</a>
+                        </li>
+                        <li><a href="#13513-output">1.3.5.1.3. Output</a></li>
+                        <li>
+                          <a href="#13514-error-treatment-and-handling"
+                            >1.3.5.1.4. Error treatment and handling</a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#1352-newlinerdc">1.3.5.2. newLineRDC</a>
+                      <ul>
+                        <li><a href="#13521-usage">1.3.5.2.1. Usage</a></li>
+                        <li>
+                          <a href="#13522-parameters">1.3.5.2.2. Parameters</a>
+                        </li>
+                        <li><a href="#13523-output">1.3.5.2.3. Output</a></li>
+                        <li>
+                          <a href="#13524-error-treatment-and-handling"
+                            >1.3.5.2.4. Error treatment and handling</a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#1353-samelinerdc">1.3.5.3. sameLineRDC</a>
+                      <ul>
+                        <li><a href="#13531-usage">1.3.5.3.1. Usage</a></li>
+                        <li>
+                          <a href="#13532-parameters">1.3.5.3.2. Parameters</a>
+                        </li>
+                        <li><a href="#13533-output">1.3.5.3.3. Output</a></li>
+                        <li>
+                          <a href="#13534-error-treatment-and-handling"
+                            >1.3.5.3.4. Error treatment and handling</a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#136-otherfunc">1.3.6. otherFunc</a>
+                  <ul>
+                    <li>
+                      <a href="#1361-pause">1.3.6.1. pause</a>
+                      <ul>
+                        <li>
+                          <a href="#13611-standard">1.3.6.1.1. standard</a>
+                          <ul>
+                            <li>
+                              <a href="#136111-usage">1.3.6.1.1.1. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#136112-parameters"
+                                >1.3.6.1.1.2. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#136113-output">1.3.6.1.1.3. Output</a>
+                            </li>
+                            <li>
+                              <a href="#136114-error-treatment-and-handling"
+                                >1.3.6.1.1.4. Error treatment and handling</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#13612-showvalue">1.3.6.1.2. showValue</a>
+                          <ul>
+                            <li>
+                              <a href="#136121-usage">1.3.6.1.2.1. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#136122-parameters"
+                                >1.3.6.1.2.2. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#136123-error-treatment-and-handling"
+                                >1.3.6.1.2.3. Error treatment and handling</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#1362-clearscreen">1.3.6.2. clearScreen</a>
+                      <ul>
+                        <li>
+                          <a href="#13621-auto">1.3.6.2.1. auto</a>
+                          <ul>
+                            <li>
+                              <a href="#136211-usage">1.3.6.2.1.1. Usage</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#13622-manual">1.3.6.2.2. manual</a>
+                          <ul>
+                            <li>
+                              <a href="#136221-usage">1.3.6.2.2.1. Usage</a>
+                            </li>
+                            <li>
+                              <a href="#136222-parameters"
+                                >1.3.6.2.2.2. Parameters</a
+                              >
+                            </li>
+                            <li>
+                              <a href="#136223-how-to-properly-use-manual"
+                                >1.3.6.2.2.3. How to properly use manual</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#14-todo">1.4. TODO</a>
+              <ul>
+                <li>
+                  <a href="#141-in-major-updates">1.4.1. In Major Updates</a>
+                  <ul>
+                    <li>
+                      <a href="#1411-pre-set-inputs">1.4.1.1. Pre-set Inputs</a>
+                    </li>
+                    <li>
+                      <a href="#1412-iterable-inputs"
+                        >1.4.1.2. Iterable Inputs</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#1413-a-config-function"
+                        >1.4.1.3. A Config Function</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#1414-call-laterrepeat-input"
+                        >1.4.1.4. Call later/repeat input</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#142-in-minor-updates">1.4.2. In Minor Updates</a>
+                  <ul>
+                    <li>
+                      <a href="#1421-new-multiselect-menu-types"
+                        >1.4.2.1. New multiSelect Menu Types</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#1422-new-singleselect-menu-type"
+                        >1.4.2.2. New singleSelect Menu Type</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#1423-adding-a-changelog"
+                        >1.4.2.3. Adding A Changelog</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <h2 class="mume-header" id="11-a-brief-description-of-input-api">
+        1.1. A Brief Description of Input API
+      </h2>
+
+      <p>
+        Input API is a python package made and maintained by Homer Haddock for
+        the express purpose of making terminal I/O both easier and simpler! When
+        using Input API you are given several options for input, including but
+        not limited to:
+      </p>
+      <ul>
+        <li>
+          Numbers
+          <ul>
+            <li>Both integers and floating point numbers</li>
+          </ul>
+        </li>
+        <li>Booleans</li>
+        <li>Strings</li>
+        <li>Menus</li>
+      </ul>
+      <h2 class="mume-header" id="installing-input-api">
+        Installing Input API
+      </h2>
+
+      <p>
+        When receiving a copy of Input API you need to install it first, here is
+        a short tutorial on how to install the Input API.
+      </p>
+      <ol>
+        <li>Install Python (v3.7 or greater)</li>
+        <li>
+          Open the folder that has the .whl file for the Input API (e.g.
+          <code>inputapi-2.0.0-py3-none-any.whl</code>)
+        </li>
+        <li>Open the .whl file with your Python installation (Not IDLE)</li>
+        <li>Wait for the window to close</li>
+        <li>Input API has been globally installed on your computer</li>
+      </ol>
+      <p>If you are using a virtual environment you just run.</p>
+      <p>For Windows:</p>
+      <p><code>pip install Path/To/File.whl</code></p>
+      <p>For Linux:</p>
+      <p><code>python3 -m pip install Path/To/File.whl</code></p>
+      <h2 class="mume-header" id="12-basic-usage">1.2. Basic Usage</h2>
+
+      <p>Now for all of the examples of use we will be importing like so:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+</pre>
+      <p>
+        Note: This way of importing is easier for IDE&apos;s that don&apos;t
+        have an &quot;Auto-Complete&quot; or &quot;AI-assisted dev.&quot;
+        feature
+      </p>
+      <p>
+        When importing Input API we have what is called &apos;The Basic
+        Library&apos;.<br />
+        The Basic Library while making usage easier it is also backwards
+        compatible with 1.X versions of Input API without having to rewrite the
+        code.
+      </p>
+      <h3 class="mume-header" id="121-numerical-input">
+        1.2.1. Numerical input
+      </h3>
+
+      <p>
+        With numerical input you can access both floating point and integer
+        numbers!<br />
+        An integer input is used as shown:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>newLineInt<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>
+        Note: We will cover parameters in
+        <a href="#13-advanced-usage">Advanced Usage</a>
+      </p>
+      <p>Floating point numbers can be used as shown:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>newLineInt<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h3 class="mume-header" id="122-clearing-the-terminal">
+        1.2.2. Clearing the terminal
+      </h3>
+
+      <p>
+        If you wish to clear the terminal by using the clearScreen function<sup
+          class="footnote-ref"
+          ><a href="#fn1" id="fnref1">[1]</a></sup
+        >:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>clearScreen<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</pre>
+      <h3 class="mume-header" id="123-boolean-input">1.2.3. Boolean input</h3>
+
+      <p>
+        If you need a boolean input we have out yesNo function for that exact
+        reason!
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>yesNo<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>
+        Fun Fact<sup class="footnote-ref"
+          ><a href="#fn2" id="fnref2">[2]</a></sup
+        >: yesNo is the only input to be in the boolean category making it the
+        loneliest function in the package!
+      </p>
+      <h2 class="mume-header" id="13-advanced-usage">1.3. Advanced Usage</h2>
+
+      <p>
+        This style of usage is good for if you need specific input. We will also
+        include the parameters for the inputs with examples.
+      </p>
+      <h3 class="mume-header" id="131-numbers">1.3.1. Numbers</h3>
+
+      <h4 class="mume-header" id="1311-integers">1.3.1.1. Integers</h4>
+
+      <p>
+        Integers serve the purpose of returning integers, integers have two ways
+        to input:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Type of input</th>
+            <th style="text-align: center">Best case for use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">New Line</td>
+            <td style="text-align: center">
+              When there are small amounts of input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">Same Line</td>
+            <td style="text-align: center">
+              When there is a lot of inputs in succession
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 class="mume-header" id="13111-the-newlineint-input">
+        1.3.1.1.1. The newLineInt input
+      </h5>
+
+      <p>There are two ways to use this input:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#This is the basic way of using newLineInt</span>
+inp<span class="token punctuation">.</span>newLineInt<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#This is the advanced way of using newLineInt</span>
+inp<span class="token punctuation">.</span>numerical<span class="token punctuation">.</span>integer<span class="token punctuation">.</span>newLineInt<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>newLineInt will output the request like this:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#For this example the request string is &quot;Number:&quot;</span>
+
+Number<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+<span class="token comment">#The &quot;&gt;&quot; is where the user will input the number</span>
+</pre>
+      <p>The parameters for the input are as follows:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">Purpose it serves</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">request</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left">
+              <code>&quot;Input an integer:&quot;</code>
+            </td>
+            <td style="text-align: left">
+              What the user will see when the input is requested
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">allowNeg</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>True</code></td>
+            <td style="text-align: left">
+              Determines if the user can give a negative number
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">min</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left">No limit</td>
+            <td style="text-align: left">What is the lowest number allowed</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">max</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left">No limit</td>
+            <td style="text-align: left">What is the highest number allowed</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              When the function is run, should the terminal be cleared
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              When the input is retrieved, should the terminal be cleared
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 class="mume-header" id="13112-the-samelineint-input">
+        1.3.1.1.2. The sameLineInt input
+      </h5>
+
+      <p>The sameLineInt has only one way to access the function:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>numerical<span class="token punctuation">.</span>integer<span class="token punctuation">.</span>sameLineInt<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>This is what sameLineInt will output:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#For this example we will have two requests, one will be &quot;X=&quot; and the other will be &quot;Y=&quot;</span>
+
+<span class="token comment">#This is the first request</span>
+X<span class="token operator">=</span>
+<span class="token comment">#And when &quot;X&quot; has been given the next request is shown</span>
+Y<span class="token operator">=</span>
+
+<span class="token comment">#The user will enter the number at the end of the string</span>
+</pre>
+      <p>
+        You can find the parameters
+        <a href="#13111-the-newlineint-input">here</a>
+      </p>
+      <h5 class="mume-header" id="13113-error-treatment-and-handling">
+        1.3.1.1.3. Error treatment and handling
+      </h5>
+
+      <p>
+        When the inputs face invalid characters, we have error messages to show
+        the user what is allowed and what isn&apos;t:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This error message will appear when the user inputs an invalid character, in this case we will put a decimal in</span>
+
+Number<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">21.6</span>
+WARNING<span class="token punctuation">:</span> Invalid character <span class="token punctuation">[</span><span class="token string">&apos;.&apos;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> to ensure the program runs correctly please enter only these characters <span class="token punctuation">[</span><span class="token string">&apos;0&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;1&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;2&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;3&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;4&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;5&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;6&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;7&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;8&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;9&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;-&apos;</span><span class="token punctuation">]</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This one will be displayed when inputing a negative number when negative numbers are disabled</span>
+
+
+X<span class="token operator">=</span><span class="token operator">-</span><span class="token number">16</span>
+WARNING<span class="token punctuation">:</span> Invalid character <span class="token punctuation">[</span><span class="token string">&apos;-&apos;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> to ensure the program runs correctly please enter only these characters <span class="token punctuation">[</span><span class="token string">&apos;0&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;1&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;2&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;3&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;4&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;5&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;6&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;7&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;8&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;9&apos;</span><span class="token punctuation">]</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#For this example we will put in a number under the minimum</span>
+
+Y<span class="token operator">=</span><span class="token number">4</span>
+WARNING<span class="token punctuation">:</span> Number <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> below minimum <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span>
+</pre>
+      <p>
+        For going over the max there are two messages.<br />
+        What is picked is depending on the amount of digits for both max and
+        what is entered:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#A number that is greater than max (Same amount of digits as max)</span>
+
+Enter <span class="token number">433724</span><span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">433725</span>
+WARNING<span class="token punctuation">:</span> Number <span class="token punctuation">[</span><span class="token number">433725</span><span class="token punctuation">]</span> above maximum <span class="token punctuation">[</span><span class="token number">433724</span><span class="token punctuation">]</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#We will go above the maximum for this example (More digits than max has)</span>
+
+Enter a <span class="token number">6</span> digit number<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">581919921</span>
+WARNING<span class="token punctuation">:</span> Too many characters<span class="token punctuation">,</span> maximum amount <span class="token keyword keyword-is">is</span> <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span> characters<span class="token punctuation">,</span> you entered <span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">]</span>
+</pre>
+      <h4 class="mume-header" id="1312-floating-point">
+        1.3.1.2. Floating point
+      </h4>
+
+      <p>
+        Floating point inputs are great for decimal numbers (e.g. The radius of
+        a circle, width of a box).<br />
+        We have two ways for requesting an float:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Type of input</th>
+            <th style="text-align: center">Best use case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">newLineFloat</td>
+            <td style="text-align: center">
+              Small amount of inputs in succession
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">sameLineFloat</td>
+            <td style="text-align: center">
+              Multiple inputs with each one after another, or retrieving
+              variables
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 class="mume-header" id="13121-newlinefloat-input">
+        1.3.1.2.1. newLineFloat input
+      </h5>
+
+      <p>Calling the function can be done in two ways:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#Basic usage</span>
+inp<span class="token punctuation">.</span>newLineFloat<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#Advanced usage</span>
+inp<span class="token punctuation">.</span>numerical<span class="token punctuation">.</span><span class="token builtin">float</span><span class="token punctuation">.</span>newLineFloat<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>
+        When using newLineFloat you get an output similar to
+        <a href="#13111-the-newlineint-input">newLineInt</a>
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This time the request is &quot;Number including decimal:&quot;</span>
+
+Number including decimal<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <p>
+        The parameters for newLineFloat are very similar to integer inputs but
+        are as follows:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">Purpose it serves</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">request</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left">
+              <code>&quot;Input an integer:&quot;</code>
+            </td>
+            <td style="text-align: left">
+              What the user will see when the input is requested
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">allowNeg</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>True</code></td>
+            <td style="text-align: left">
+              Determines if the user can give a negative number
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">min</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left">No limit</td>
+            <td style="text-align: left">What is the lowest number allowed</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">max</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left">No limit</td>
+            <td style="text-align: left">What is the highest number allowed</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              When the function is run, should the terminal be cleared
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              When the input is retrieved, should the terminal be cleared
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 class="mume-header" id="13122-samelinefloat">
+        1.3.1.2.2. sameLineFloat
+      </h5>
+
+      <p>sameLineFloat has only one way to be used:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>numerical<span class="token punctuation">.</span><span class="token builtin">float</span><span class="token punctuation">.</span>sameLineFloat<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>The input function outputs like so:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Request string is &quot;Float=&quot;</span>
+
+Float<span class="token operator">=</span>
+</pre>
+      <p>Parameters are found <a href="#1312-floating-point">here</a>.</p>
+      <h5 class="mume-header" id="13123-error-treatment-and-handling">
+        1.3.1.2.3. Error treatment and handling
+      </h5>
+
+      <p>
+        For most of these can be found in
+        <a href="#13113-error-treatment-and-handling"
+          >the integer&apos;s error handling</a
+        >
+        except for one error.<br />
+        When dealing with decimal points (&quot;.&quot;), it can&apos;t just be
+        blocked, so we have a solution from the 1.X versions of the Input API:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The conversion from straight string to float only works if all charecters are numbers and there are no more that one decimal point</span>
+<span class="token comment">#So this is what will happen if we try to break it</span>
+
+Only one decimal point<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2.2</span><span class="token number">.2</span>
+<span class="token comment">#The result is 2.22</span>
+</pre>
+      <p>
+        How this works is when there is more than one point (e.g.
+        <code>1.2.3</code>), it will only acknowledge the first decimal place
+        and remove the others (<code>1.2.3</code> -&gt; <code>1.23</code>).
+      </p>
+      <h3 class="mume-header" id="132-strings">1.3.2. Strings</h3>
+
+      <p>
+        Strings works like <code>input()</code> but allows for more options and
+        helps with error handling so you don&apos;t need something like this
+        copy and pasted 20 times:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-while">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+  user <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+  <span class="token keyword keyword-try">try</span><span class="token punctuation">:</span>
+    convert<span class="token punctuation">(</span>user<span class="token punctuation">)</span>
+  <span class="token keyword keyword-except">except</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-continue">continue</span>
+  <span class="token keyword keyword-else">else</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-break">break</span>
+<span class="token comment">#convert() is the stand in for what you wan&apos;t the string converted to</span>
+</pre>
+      <p>
+        Strings were first introduced in Input API version 1.2.0 as newLineStr,
+        got a bug fix in 1.2.1 (Like an hour after 1.2.0 got built).<br />
+        Everything<sup class="footnote-ref"
+          ><a href="#fn3" id="fnref3">[3]</a></sup
+        >
+        in the Input API is dependant on the string input since it gives more
+        viability and ease of use. There are two types of string input and they
+        are:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Type of input</th>
+            <th style="text-align: center">Best use case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">newLineStr</td>
+            <td style="text-align: center">
+              Small amount of inputs in succession
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">sameLineStr</td>
+            <td style="text-align: center">
+              Multiple inputs with each one after another, getting multiple
+              strings, and replacing the character that sits left of the user
+              input (<code>&gt;</code>) with something else
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 class="mume-header" id="1321-newlinestr">1.3.2.1. newLineStr</h4>
+
+      <p>newLineStr has (for the thousandth time) two ways to be used:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#First way</span>
+inp<span class="token punctuation">.</span>newLineStr<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#Second way</span>
+inp<span class="token punctuation">.</span>strings<span class="token punctuation">.</span>newLineStr<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>
+        When using the newLineStr the user using the program will have this as
+        the output:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The request, &quot;String:&quot;</span>
+
+String<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <p>We have the parameters for newLineStr as:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">request</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left">
+              <code>&apos;Input a string:&apos;</code>
+            </td>
+            <td style="text-align: left">Is displayed when requesting input</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">minLength</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left"><code>0</code></td>
+            <td style="text-align: left">
+              Amount of characters needed for input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">maxLength</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left">None</td>
+            <td style="text-align: left">
+              Max amount of characters allowed in input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">allowOnly</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left">None</td>
+            <td style="text-align: left">
+              Only allows an input if all characters are within the string,
+              (Does nothing if default)
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before loading input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after getting input
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 class="mume-header" id="1322-samelinestr">1.3.2.2. sameLineStr</h4>
+
+      <p>sameLineStr has only one way to be used:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#Only way</span>
+inp<span class="token punctuation">.</span>strings<span class="token punctuation">.</span>sameLineStr<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>The output for sameLineStr is:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The request, &quot;String=&quot;</span>
+String<span class="token operator">=</span>
+</pre>
+      <p>The parameters for sameLineStr are:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">request</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left"><code>&apos;String=&apos;</code></td>
+            <td style="text-align: left">Is displayed when requesting input</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">minLength</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left"><code>0</code></td>
+            <td style="text-align: left">
+              Amount of characters needed for input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">maxLength</td>
+            <td style="text-align: left">integer</td>
+            <td style="text-align: left">None</td>
+            <td style="text-align: left">
+              Max amount of characters allowed in input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">allowOnly</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left">None</td>
+            <td style="text-align: left">
+              Only allows an input if all characters are within the string,
+              (Does nothing if default)
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before loading input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after getting input
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 class="mume-header" id="1323-error-treatment-and-handling">
+        1.3.2.3. Error treatment and handling
+      </h4>
+
+      <p>
+        When it comes to error handling on strings, we have three potential
+        errors that can happen:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This happens when the user inputs less than the minimum amount of characters</span>
+
+Just enter three characters<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>No
+WARNING<span class="token punctuation">:</span> Input requires <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> characters <span class="token keyword keyword-or">or</span> more<span class="token punctuation">,</span> you entered <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This happens when the user inputs more than the maximum amount of characters</span>
+
+Three characters <span class="token keyword keyword-or">or</span> less<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>Four
+WARNING<span class="token punctuation">:</span> Input requires <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> characters <span class="token keyword keyword-or">or</span> less<span class="token punctuation">,</span> you entered <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span>
+</pre>
+      <p>
+        There are three separate messages related to
+        <code>allowOnly</code> depending on length of the amount allowed:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#When there is less than 20 characters allowed</span>
+<span class="token comment">#In this case there is only numbers allowed</span>
+
+Number<span class="token operator">=</span>Boo!
+WARNING<span class="token punctuation">:</span> Input has invalid character <span class="token punctuation">[</span>B<span class="token punctuation">]</span><span class="token punctuation">,</span> allowed characters are <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#When there is more than 30 characters allowed</span>
+<span class="token comment">#In this case there is only letters and numbers allowed</span>
+
+Enter only what a normal person would<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>!@\#$<span class="token operator">%</span><span class="token operator">^</span><span class="token operator">&amp;</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token punctuation">)</span>_<span class="token operator">+</span><span class="token operator">-=</span>
+WARNING<span class="token punctuation">:</span> Input has invalid character <span class="token punctuation">[</span>!<span class="token punctuation">]</span><span class="token punctuation">,</span> allowed characters are <span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> f<span class="token punctuation">,</span> g<span class="token punctuation">,</span> h<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">,</span> k<span class="token punctuation">,</span> l<span class="token punctuation">,</span> m<span class="token punctuation">,</span> n<span class="token punctuation">,</span> o<span class="token punctuation">,</span> p<span class="token punctuation">,</span> q<span class="token punctuation">,</span> r<span class="token punctuation">,</span> s<span class="token punctuation">,</span> t <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This is what happens when there is more than 20 but less than 30 characters allowed</span>
+<span class="token comment">#In this case there is only lowercase letters and isn&apos;t &apos;a&apos; allowed</span>
+
+Please don&apos;t yell<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>AAAAA
+WARNING<span class="token punctuation">:</span> Input has invalid character <span class="token punctuation">[</span>A<span class="token punctuation">]</span><span class="token punctuation">,</span> allowed characters are <span class="token punctuation">[</span>b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> f<span class="token punctuation">,</span> g<span class="token punctuation">,</span> h<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">,</span> k<span class="token punctuation">,</span> l<span class="token punctuation">,</span> m<span class="token punctuation">,</span> n<span class="token punctuation">,</span> o<span class="token punctuation">,</span> p<span class="token punctuation">,</span> q<span class="token punctuation">,</span> r<span class="token punctuation">,</span> s<span class="token punctuation">,</span> t<span class="token punctuation">,</span> u <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> z<span class="token punctuation">]</span>
+</pre>
+      <h3 class="mume-header" id="133-booleans">1.3.3. Booleans</h3>
+
+      <p>
+        The only boolean input there is is <code>yesNo</code> which is a boolean
+        input that only allows for <code>y</code> or <code>n</code> as input.
+        When input is given it will turn it into a boolean value (<code
+          >True</code
+        >
+        or <code>False</code>).
+      </p>
+      <p>
+        The Booleans best case use is for when you want to get a yes or no
+        answer from the user. It is also used in the <code>confirm</code> input.
+        (Refer to menus for more info about confirming input [Placeholder Link
+        For Menus])
+      </p>
+      <h4 class="mume-header" id="1331-yesno">1.3.3.1. yesNo</h4>
+
+      <p>yesNo has two ways to be used:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#The simple way</span>
+inp<span class="token punctuation">.</span>yesNo<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#The hard way</span>
+inp<span class="token punctuation">.</span>boolean<span class="token punctuation">.</span>yesNo<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <p>yesNo has two different outputs:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#When numeric input is allowed (default)</span>
+<span class="token comment">#This is was added in 2.0.0</span>
+
+<span class="token comment">#Request is &apos;Do you breathe air?&apos;</span>
+Do you breathe air?
+Numeric response allowed <span class="token punctuation">(</span>Y<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">[</span>Y<span class="token operator">/</span>n<span class="token punctuation">]</span><span class="token punctuation">:</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#When numeric isn&apos;t allowed</span>
+<span class="token comment">#Request is &apos;Is your fride running?&apos;</span>
+
+Is your fridge running?
+<span class="token punctuation">[</span>Y<span class="token operator">/</span>n<span class="token punctuation">]</span><span class="token punctuation">:</span>
+</pre>
+      <p>The parameters for yesNo are:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">request</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left">
+              <code>&apos;Yes or no?&apos;</code>
+            </td>
+            <td style="text-align: left">Is displayed when requesting input</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">allowNumeric</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>True</code></td>
+            <td style="text-align: left">
+              Allows for numeric input (Y=1, n=2)
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before loading input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after getting input
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 class="mume-header" id="1332-error-treatment-and-handling">
+        1.3.3.2. Error treatment and handling
+      </h4>
+
+      <p>
+        The errors in yesNo mainly happen through the sameLineStr but they are:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#When something not allowed is entered (More than 1 character)</span>
+
+Did you catch the fridge?
+Numeric response allowed <span class="token punctuation">(</span>Y<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">[</span>Y<span class="token operator">/</span>n<span class="token punctuation">]</span><span class="token punctuation">:</span>Still trying to
+WARNING<span class="token punctuation">:</span> Input requires <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> characters <span class="token keyword keyword-or">or</span> less<span class="token punctuation">,</span> you entered <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">]</span> characters
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Something not allowed is entered (Numeric not allowed)</span>
+
+Can you see me?
+<span class="token punctuation">[</span>Y<span class="token operator">/</span>n<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token number">1</span>
+WARNING<span class="token punctuation">:</span> Input has invalid character <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> allowed characters are <span class="token punctuation">[</span><span class="token string">&apos;Y&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;N&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;y&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;n&apos;</span><span class="token punctuation">]</span>
+</pre>
+      <h3 class="mume-header" id="134-menus">1.3.4. Menus</h3>
+
+      <p>
+        Menus allow the user to select a set of given options, there could be
+        only one to select or multiple.
+      </p>
+      <h4 class="mume-header" id="1341-singleselect-menus">
+        1.3.4.1. singleSelect menus
+      </h4>
+
+      <p>
+        These menus present multiple options but only allow the user to pick
+        one. These can be used for the &apos;main hub&apos; of a program to use
+        other functions and return after. The returned value is the value
+        assigned to the option.
+      </p>
+      <h5 class="mume-header" id="13411-numericserial">
+        1.3.4.1.1. numericSerial
+      </h5>
+
+      <p>
+        The numericSerial is the menu used in 1.X versions of Input API. All
+        options are given a number from 1 to length of options given.
+      </p>
+      <h6 class="mume-header" id="134111-usage">1.3.4.1.1.1. Usage</h6>
+
+      <p>Two ways to call and use this function.</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The 1.X version of using the function</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>menu<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The new way of using numericSerial</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>menus<span class="token punctuation">.</span>singleSelect<span class="token punctuation">.</span>numericSerial<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="134112-parameters">
+        1.3.4.1.1.2. Parameters
+      </h6>
+
+      <p>The parameters of numericSerial are as follows:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">*args</td>
+            <td style="text-align: left">Any</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">
+              Options that are displayed to the user
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before displaying output
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after user gives input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">title</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left"><code>&apos;Menu&apos;</code></td>
+            <td style="text-align: left">
+              What will be displayed as the name/purpose of the menu
+              (<code>---{title}---</code>)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="134113-output">1.3.4.1.1.3. Output</h6>
+
+      <p>The output of the numericSerial is:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#An example of game option selection is</span>
+
+<span class="token comment">#Note: Titles have a white background and black text</span>
+<span class="token comment">#but cannot be rendered properly in markdown</span>
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Where do you go?<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> To the blazing inferno
+<span class="token number">2</span><span class="token punctuation">:</span> To the tree that reads books
+
+To select an option <span class="token builtin">input</span> the number assigned to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <h6 class="mume-header" id="134114-error-treatment-and-handling">
+        1.3.4.1.1.4. Error treatment and handling
+      </h6>
+
+      <p>
+        The errors of numericSerial is the
+        <a href="#13113-error-treatment-and-handling"
+          >newLineInt error treatment hand handling</a
+        >
+        with the following exception:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#When giving a response not within the given options it will just ignore it</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>What animal do you prefer<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Cat
+<span class="token number">2</span><span class="token punctuation">:</span> Dog
+
+To select an option <span class="token builtin">input</span> the number assigned to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">3</span>
+To select an option <span class="token builtin">input</span> the number assigned to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <h5 class="mume-header" id="13412-numericindex">
+        1.3.4.1.2. numericIndex
+      </h5>
+
+      <p>
+        The numericIndex menu is almost the same as
+        <a href="#13411-numericserial">numericSerial</a> with the exception that
+        instead of starting at 1 instead it starts at 0.
+      </p>
+      <h6 class="mume-header" id="134121-usage">1.3.4.1.2.1. Usage</h6>
+
+      <p>There is only one way to use numericIndex:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>menus<span class="token punctuation">.</span>singleSelect<span class="token punctuation">.</span>numericIndex<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="134122-parameters">
+        1.3.4.1.2.2. Parameters
+      </h6>
+
+      <p>
+        The parameters of numericIndex are the same as
+        <a href="#134112-parameters">numericSerial</a>:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">*args</td>
+            <td style="text-align: left">Any</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">
+              Options that are displayed to the user
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before displaying output
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after user gives input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">title</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left"><code>&apos;Menu&apos;</code></td>
+            <td style="text-align: left">
+              What will be displayed as the name/purpose of the menu
+              (<code>---{title}---</code>)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="134123-output">1.3.4.1.2.3. Output</h6>
+
+      <p>This is what the menu would output when called:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Now lets show what a &apos;main hub&apos; of a script could look like</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Cool Math Program<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Algebra
+<span class="token number">1</span><span class="token punctuation">:</span> Geometry
+<span class="token number">2</span><span class="token punctuation">:</span> Calculus
+<span class="token number">3</span><span class="token punctuation">:</span> Quit
+
+To select an option <span class="token builtin">input</span> the number assigned to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <h6 class="mume-header" id="134124-error-treatment-and-handling">
+        1.3.4.1.2.4. Error treatment and handling
+      </h6>
+
+      <p>
+        It&apos;s just the same as
+        <a href="#134114-error-treatment-and-handling">numericSerial</a>.
+      </p>
+      <h5 class="mume-header" id="13413-alphabetical">
+        1.3.4.1.3. alphabetical
+      </h5>
+
+      <p>
+        The alphabetical menu is the most unique of all singleSelect menus being
+        that instead of using numbers as the selectable options it uses the
+        Modern Latin Alphabet (aka The English Alphabet).
+      </p>
+      <h6 class="mume-header" id="134131-usage">1.3.4.1.3.1. Usage</h6>
+
+      <p>Only one way to use the function:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>menus<span class="token punctuation">.</span>singleSelect<span class="token punctuation">.</span>alphabetical<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="134132-parameters">
+        1.3.4.1.3.2. Parameters
+      </h6>
+
+      <p>
+        The parameters are the same as
+        <a href="#134112-parameters">numericSerial and numericIndex</a>:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">*args</td>
+            <td style="text-align: left">Any</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">
+              Options that are displayed to the user
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before displaying output
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after user gives input
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">title</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left"><code>&apos;Menu&apos;</code></td>
+            <td style="text-align: left">
+              What will be displayed as the name/purpose of the menu
+              (<code>---{title}---</code>)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="134133-output">1.3.4.1.3.3. Output</h6>
+
+      <p>The output of alphabetical is as follows:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This could be used for trivia questions</span>
+<span class="token comment">#Also the correct statement is &apos;C&apos;</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Guess The Correct Statement<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+A<span class="token punctuation">:</span> The plural word <span class="token keyword keyword-for">for</span> octopus <span class="token keyword keyword-is">is</span> octopi
+B<span class="token punctuation">:</span> Luigi`s last name <span class="token keyword keyword-is">is</span> Luigi since Mario`s <span class="token keyword keyword-is">is</span> Mario
+C<span class="token punctuation">:</span> In a State of the US it <span class="token keyword keyword-is">is</span> illegal to wear a fake mustache to church <span class="token keyword keyword-if">if</span> it makes someone laugh
+
+To select an option <span class="token builtin">input</span> the letters <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <p>
+        When given more options than character an additional character will be
+        given:
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#I can&apos;t bother making something creative for this</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Select One<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+A<span class="token punctuation">:</span> Option <span class="token number">1</span>
+B<span class="token punctuation">:</span> Option <span class="token number">2</span>
+C<span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+X<span class="token punctuation">:</span> Option <span class="token number">24</span>
+Y<span class="token punctuation">:</span> Option <span class="token number">25</span>
+Z<span class="token punctuation">:</span> Option <span class="token number">26</span>
+AA<span class="token punctuation">:</span> Option <span class="token number">27</span>
+</pre>
+      <h6 class="mume-header" id="134134-error-treatment-and-handling">
+        1.3.4.1.3.4. Error treatment and handling
+      </h6>
+
+      <p>
+        It is actually the same as
+        <a href="#134114-error-treatment-and-handling">numericSerial</a> with
+        the following exception.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Since it uses different characters for input this is the message for invalid characters</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>What <span class="token keyword keyword-is">is</span> the better number?<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+A<span class="token punctuation">:</span> <span class="token number">1</span>
+B<span class="token punctuation">:</span> <span class="token number">2</span>
+
+To select an option <span class="token builtin">input</span> the letters <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">1</span>
+WARNING<span class="token punctuation">:</span> Input has invalid character <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> allowed characters are <span class="token punctuation">[</span><span class="token string">&apos;A&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;B&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;C&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;D&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;E&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;F&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;G&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;H&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;I&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;J&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;K&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;L&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;M&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;N&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;O&apos;</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token string">&apos;v&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;w&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;x&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;y&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;z&apos;</span><span class="token punctuation">]</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <h4 class="mume-header" id="1342-multiselect-menus">
+        1.3.4.2. multiSelect menus
+      </h4>
+
+      <p>
+        With multiSelect menus instead of only allowing one option to be
+        selected you can select more than one, hence the name
+        &apos;multiSelect&apos; and &apos;singleSelect&apos;.
+      </p>
+      <h5 class="mume-header" id="13421-returnselected-menus">
+        1.3.4.2.1. returnSelected menus
+      </h5>
+
+      <p>
+        returnSelected menus return what was selected by the user.<br />
+        (Since the header limit is reached the one menu will have it&apos;s
+        documentation outside of it&apos;s normal bounds)
+      </p>
+      <h6 class="mume-header" id="134211-numericserial">
+        1.3.4.2.1.1. numericSerial
+      </h6>
+
+      <p>
+        numericSerial has near same functionality as
+        <a href="#13411-numericserial">singleSelect numericSerial</a> except for
+        a few changes to allow it to be multiSelect.
+      </p>
+      <h6 class="mume-header" id="134212-usage">1.3.4.2.1.2. Usage</h6>
+
+      <p>The only menu there is has only one way to be used.</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>menus<span class="token punctuation">.</span>multiSelect<span class="token punctuation">.</span>returnSelected<span class="token punctuation">.</span>numericSerial<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="134213-parameters">
+        1.3.4.2.1.3. Parameters
+      </h6>
+
+      <p>The parameters for the multiSelect menu are:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">*args</td>
+            <td style="text-align: left">Any</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">
+              Options that are displayed to the user
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">confirmChoice</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>True</code></td>
+            <td style="text-align: left">
+              Ensures that what the user selected was what they intended to
+              select
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">showSelectedOnRefresh</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>True</code></td>
+            <td style="text-align: left">
+              Allows users to see what they selected (See Output for further
+              detail)
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">allowNoSelection</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Allows the user to simply select nothing
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before displaying output
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">cleanOnRefresh</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal when an option is selected
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after user selects options
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">title</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left"><code>&apos;Menu&apos;</code></td>
+            <td style="text-align: left">
+              What will be displayed as the name/purpose of the menu
+              (<code>---{title}---</code>)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="134214-output">1.3.4.2.1.4. Output</h6>
+
+      <p>
+        The output in a single state is almost identical to
+        <a href="#13411-numericserial">numericSerial</a> but the difference
+        between selections is what will be documented.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#For our first output we will have all values default</span>
+<span class="token comment">#You can replecate this with</span>
+<span class="token comment">#inp.menus.multiSelect.returnSelected.numericSerial(&apos;Option 1&apos;, &apos;Option 2&apos;, &apos;Option 3&apos;)</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">1</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">3</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">0</span>
+
+Option <span class="token number">1</span><span class="token punctuation">,</span> Option <span class="token number">3</span>
+Confirm choice?
+Numeric response allowed <span class="token punctuation">(</span>Y<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">[</span>Y<span class="token operator">/</span>n<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token number">1</span>
+
+<span class="token comment"># This returned [&apos;Option 1&apos;, &apos;Option 3&apos;]</span>
+</pre>
+      <p>
+        But when showSelectedOnRefresh is <code>False</code> you get a different
+        output.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This one will be recreated with</span>
+<span class="token comment">#inp.menus.multiSelect.returnSelected.numericSerial(&apos;Option 1&apos;, &apos;Option 2&apos;, &apos;Option 3&apos;, showSelectedOnRefresh=False)</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">1</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">3</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">1</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">1</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">1</span>
+
+Option <span class="token number">1</span><span class="token punctuation">,</span> Option <span class="token number">2</span><span class="token punctuation">,</span> Option <span class="token number">3</span>
+Confirm choice?
+Numeric response allowed <span class="token punctuation">(</span>Y<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">[</span>Y<span class="token operator">/</span>n<span class="token punctuation">]</span><span class="token punctuation">:</span>y
+
+<span class="token comment">#This returned [&apos;Option 1&apos;, &apos;Option 2&apos;, &apos;Option 3&apos;]</span>
+</pre>
+      <p>
+        With showSelectedOnRefresh disabled it makes correcting errors more
+        difficult and harder to select options but can remove the possibilities
+        of selecting one option twice by accident. Also if all options are
+        selected it will ask if you selected all options without you needing to
+        select <code>Done</code>.
+      </p>
+      <h6 class="mume-header" id="134215-error-treatment-and-handling">
+        1.3.4.2.1.5. Error treatment and handling
+      </h6>
+
+      <p>
+        The only possible errors are the ones from both
+        <a href="#13113-error-treatment-and-handling">newLineInt</a> and
+        <a href="#1332-error-treatment-and-handling">yesNo</a> since they are
+        what the user inputs through.
+      </p>
+      <h5 class="mume-header" id="13422-returndeselected">
+        1.3.4.2.2. returnDeselected
+      </h5>
+
+      <p>
+        returnDeselected is almost the same as
+        <a href="#134211-numericserial">returnSelected</a> with the only
+        difference being that instead of returning what the user selected it
+        returns what the user <strong>didn&apos;t</strong> select.
+      </p>
+      <h6 class="mume-header" id="134221-numericserial">
+        1.3.4.2.2.1. numericSerial
+      </h6>
+
+      <p>
+        numericSerial assigns numbers to the options from 1 to the length of
+        *args.
+      </p>
+      <h6 class="mume-header" id="134222-usage">1.3.4.2.2.2. Usage</h6>
+
+      <p>There is only one way to use this menu:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>menus<span class="token punctuation">.</span>multiSelect<span class="token punctuation">.</span>returnDeselected<span class="token punctuation">.</span>numericSerial<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="134223-parameters">
+        1.3.4.2.2.3. Parameters
+      </h6>
+
+      <p>
+        The parameters are identical to
+        <a href="#134213-parameters">returnSelected&apos;s parameters</a>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">*args</td>
+            <td style="text-align: left">Any</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">
+              Options that are displayed to the user
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">confirmChoice</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>True</code></td>
+            <td style="text-align: left">
+              Ensures that what the user selected was what they intended to
+              select
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">showSelectedOnRefresh</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>True</code></td>
+            <td style="text-align: left">
+              Allows users to see what they selected (See Output for further
+              detail)
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">allowNoSelection</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Allows the user to simply select nothing
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal before displaying output
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">cleanOnRefresh</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal when an option is selected
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">
+              Clears terminal after user selects options
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">title</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left"><code>&apos;Menu&apos;</code></td>
+            <td style="text-align: left">
+              What will be displayed as the name/purpose of the menu
+              (<code>---{title}---</code>)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="134224-output">1.3.4.2.2.4. Output</h6>
+
+      <p>
+        The output is identical to
+        <a href="#134214-output">returnSelected</a> where the output is the
+        inverse.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>Menu<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Option <span class="token number">1</span>
+<span class="token number">2</span><span class="token punctuation">:</span> <span class="token operator">*</span>Option <span class="token number">2</span>
+<span class="token number">3</span><span class="token punctuation">:</span> Option <span class="token number">3</span>
+<span class="token number">0</span><span class="token punctuation">:</span> Done
+
+Multiple selection menu
+To select an option <span class="token builtin">input</span> the number <span class="token builtin">next</span> to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">0</span>
+
+Option <span class="token number">2</span>
+Confirm choice?
+Numeric response allowed <span class="token punctuation">(</span>Y<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">[</span>Y<span class="token operator">/</span>n<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token number">1</span>
+
+<span class="token comment">#This returned [&apos;Option 1&apos;, &apos;Option 3&apos;]</span>
+</pre>
+      <h6 class="mume-header" id="134225-error-treatment-and-handling">
+        1.3.4.2.2.5. Error treatment and handling
+      </h6>
+
+      <p>
+        Refer to
+        <a href="#134215-error-treatment-and-handling">returnSelected</a> for
+        error treatment and handling.
+      </p>
+      <h3 class="mume-header" id="135-rdcs">1.3.5. RDCs</h3>
+
+      <p>
+        RDC (aka Radius Diameter Circumference) leans more on the mathematical
+        part. RDC takes a Radius, Diameter, or Circumference of a circle and
+        returns the radius.
+      </p>
+      <h4 class="mume-header" id="1351-rdc">1.3.5.1. RDC</h4>
+
+      <p>
+        RDC was implemented in the 1.X versions of Input API, this is the most
+        basic RDC in that you need another input for it to work.
+      </p>
+      <h5 class="mume-header" id="13511-usage">1.3.5.1.1. Usage</h5>
+
+      <p>There are two ways to use RDC:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The 1.X way to use RDC</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>RDC<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The new way to use RDC</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>RDCs<span class="token punctuation">.</span>RDC<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h5 class="mume-header" id="13512-parameters">1.3.5.1.2. Parameters</h5>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">length</td>
+            <td style="text-align: left">float</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">
+              The value to be converted to radius
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal before display</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal when converted</td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 class="mume-header" id="13513-output">1.3.5.1.3. Output</h5>
+
+      <p>The only output RDC has is:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>RDC<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Radius
+<span class="token number">2</span><span class="token punctuation">:</span> Diameter
+<span class="token number">3</span><span class="token punctuation">:</span> Circumference
+
+To select an option <span class="token builtin">input</span> the number assigned to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span>
+</pre>
+      <h5 class="mume-header" id="13514-error-treatment-and-handling">
+        1.3.5.1.4. Error treatment and handling
+      </h5>
+
+      <p>
+        All error treatment and handling is dealt by the
+        <a href="#134114-error-treatment-and-handling">menu</a> RDC uses. The
+        only error that can happen is if length is not a number.
+      </p>
+      <h4 class="mume-header" id="1352-newlinerdc">1.3.5.2. newLineRDC</h4>
+
+      <p>
+        newLineRDC doesn&apos;t require you to input length, it will simply just
+        request the length with
+        <a href="#13121-newlinefloat-input">newLineFloat</a> then returns
+        radius.
+      </p>
+      <h5 class="mume-header" id="13521-usage">1.3.5.2.1. Usage</h5>
+
+      <p>Only one way to use newLineRDC:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>RDCs<span class="token punctuation">.</span>newLineRDC<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h5 class="mume-header" id="13522-parameters">1.3.5.2.2. Parameters</h5>
+
+      <p>The parameters are:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal before display</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnRefresh</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal between inputs</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal when converted</td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 class="mume-header" id="13523-output">1.3.5.2.3. Output</h5>
+
+      <p>The output for newLineRDC isn&apos;t much:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Let&apos;s do a radius of 5</span>
+RDC<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">5</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>RDC<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Radius
+<span class="token number">2</span><span class="token punctuation">:</span> Diameter
+<span class="token number">3</span><span class="token punctuation">:</span> Circumference
+
+To select an option <span class="token builtin">input</span> the number assigned to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">1</span>
+
+<span class="token comment"># This returned 5.0</span>
+</pre>
+      <h5 class="mume-header" id="13524-error-treatment-and-handling">
+        1.3.5.2.4. Error treatment and handling
+      </h5>
+
+      <p>
+        The errors for newLineRDC are handled by
+        <a href="#13123-error-treatment-and-handling">newLineFloat</a> and
+        <a href="#134114-error-treatment-and-handling"
+          >singleSelect&apos;s numericSerial</a
+        >.
+      </p>
+      <h4 class="mume-header" id="1353-samelinerdc">1.3.5.3. sameLineRDC</h4>
+
+      <p>
+        sameLineRDC uses <a href="#13122-samelinefloat">sameLineFloat</a> as the
+        input instead of <a href="#13121-newlinefloat-input">newLineFloat</a>,
+        this makes the input more compact and takes up less space for input.
+      </p>
+      <h5 class="mume-header" id="13531-usage">1.3.5.3.1. Usage</h5>
+
+      <p>There is only one way to use sameLineRDC:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>RDCs<span class="token punctuation">.</span>sameLineRDC<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h5 class="mume-header" id="13532-parameters">1.3.5.3.2. Parameters</h5>
+
+      <p>These are the parameters for sameLineRDC:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal before display</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnRefresh</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal between inputs</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal when converted</td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 class="mume-header" id="13533-output">1.3.5.3.3. Output</h5>
+
+      <p>The output for sameLineRDC is as follows:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Lets do a diameter of 26</span>
+RDC<span class="token operator">=</span><span class="token number">26</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>RDC<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+<span class="token number">1</span><span class="token punctuation">:</span> Radius
+<span class="token number">2</span><span class="token punctuation">:</span> Diameter
+<span class="token number">3</span><span class="token punctuation">:</span> Circumference
+
+To select an option <span class="token builtin">input</span> the number assigned to it<span class="token punctuation">:</span>
+<span class="token operator">&gt;</span><span class="token number">2</span>
+
+<span class="token comment">#This returned 13.0</span>
+</pre>
+      <h5 class="mume-header" id="13534-error-treatment-and-handling">
+        1.3.5.3.4. Error treatment and handling
+      </h5>
+
+      <p>
+        All possible errors happen through
+        <a href="#13123-error-treatment-and-handling">sameLineFloat</a> and
+        <a href="#134114-error-treatment-and-handling"
+          >singleSelect&apos;s numericSerial</a
+        >.
+      </p>
+      <h3 class="mume-header" id="136-otherfunc">1.3.6. otherFunc</h3>
+
+      <p>
+        otherFunc is what features the Input API has but isn&apos;t actually
+        input. Just about all inputs require otherFunc to work just enough to
+        keep afloat. You don&apos;t need to master this to actually be good at
+        using Input API.
+      </p>
+      <h4 class="mume-header" id="1361-pause">1.3.6.1. pause</h4>
+
+      <p>
+        With pause it will stop the program until a user presses ENTER, this is
+        really simple and is never used by any input.
+      </p>
+      <h5 class="mume-header" id="13611-standard">1.3.6.1.1. standard</h5>
+
+      <p>
+        standard is the first pause function and just pauses with no other
+        noteworthy functionality.
+      </p>
+      <h6 class="mume-header" id="136111-usage">1.3.6.1.1.1. Usage</h6>
+
+      <p>There are two ways to use standard:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#This one actually makes sense</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>pause<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The reimagined way</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>otherFunc<span class="token punctuation">.</span>pause<span class="token punctuation">.</span>standard<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="136112-parameters">
+        1.3.6.1.1.2. Parameters
+      </h6>
+
+      <p>The parameters for standard is:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal before pausing</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal when resuming</td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="136113-output">1.3.6.1.1.3. Output</h6>
+
+      <p>The output is really lackluster:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Anything can be printed before pausing</span>
+<span class="token comment">#If clearOnLoad is False</span>
+Press ENTER to <span class="token keyword keyword-continue">continue</span><span class="token punctuation">:</span>
+</pre>
+      <h6 class="mume-header" id="136114-error-treatment-and-handling">
+        1.3.6.1.1.4. Error treatment and handling
+      </h6>
+
+      <p>
+        If you can find an error that can only happen with standard... congrats
+        at breaking the most simple function the Input API has.
+      </p>
+      <h5 class="mume-header" id="13612-showvalue">1.3.6.1.2. showValue</h5>
+
+      <p>
+        This works almost identical to
+        <a href="#13611-standard">standard</a> but allows you to print values
+        while having clearOnLoad <code>True</code>.
+      </p>
+      <h6 class="mume-header" id="136121-usage">1.3.6.1.2.1. Usage</h6>
+
+      <p>Only one way to use showValue:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>otherFunc<span class="token punctuation">.</span>pause<span class="token punctuation">.</span>showValue<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="136122-parameters">
+        1.3.6.1.2.2. Parameters
+      </h6>
+
+      <p>The parameters for showValue are:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">*values</td>
+            <td style="text-align: left">Any</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">
+              The values to be displayed on pause
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearOnLoad</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal before pausing</td>
+          </tr>
+          <tr>
+            <td style="text-align: left">clearWhenDone</td>
+            <td style="text-align: left">boolean</td>
+            <td style="text-align: left"><code>False</code></td>
+            <td style="text-align: left">Clears terminal when resuming</td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="136123-error-treatment-and-handling">
+        1.3.6.1.2.3. Error treatment and handling
+      </h6>
+
+      <p>
+        The errors that can happen are un-treatable and will break the script.
+      </p>
+      <h4 class="mume-header" id="1362-clearscreen">1.3.6.2. clearScreen</h4>
+
+      <p>
+        clearScreen is the only part of Input API that is depended to the point
+        of breaking. If clearScreen breaks then everything that wants to clear
+        the terminal will break. clearScreen will only work with Windows, MacOS,
+        and Linux based systems. Anything else is either lucky enough to be
+        under the umbrella or incompatible entirely.
+      </p>
+      <h5 class="mume-header" id="13621-auto">1.3.6.2.1. auto</h5>
+
+      <p>
+        auto will clear the terminal while not needing info on the OS. It
+        instead will ask Python through <code>os</code> to get info on the OS to
+        use the right command to clear the terminal. This function has no
+        parameters or errors, so you can just call it and nothing bad will
+        happen.
+      </p>
+      <h6 class="mume-header" id="136211-usage">1.3.6.2.1.1. Usage</h6>
+
+      <p>Two ways to use auto:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The original way</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>clearScreen<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</pre>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#The way Input API uses auto</span>
+
+inp<span class="token punctuation">.</span>otherFunc<span class="token punctuation">.</span>clearScreen<span class="token punctuation">.</span>auto<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</pre>
+      <h5 class="mume-header" id="13622-manual">1.3.6.2.2. manual</h5>
+
+      <p>
+        manual clearScreen gives you the ability to clear the terminal for one
+        OS and not all. Though MacOS and Linux based systems use the same
+        command for their clearing, it&apos;s more allow Windows to clear or
+        allow the other two to clear.
+      </p>
+      <h6 class="mume-header" id="136221-usage">1.3.6.2.2.1. Usage</h6>
+
+      <p>Only one way to use manual:</p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+inp<span class="token punctuation">.</span>otherFunc<span class="token punctuation">.</span>clearScreen<span class="token punctuation">.</span>manual<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</pre>
+      <h6 class="mume-header" id="136222-parameters">
+        1.3.6.2.2.2. Parameters
+      </h6>
+
+      <p>The parameter for manual is:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left">Parameter</th>
+            <th style="text-align: left">data type</th>
+            <th style="text-align: left">default</th>
+            <th style="text-align: left">purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">OS</td>
+            <td style="text-align: left">string</td>
+            <td style="text-align: left">No default</td>
+            <td style="text-align: left">What OS you want to be cleared</td>
+          </tr>
+        </tbody>
+      </table>
+      <h6 class="mume-header" id="136223-how-to-properly-use-manual">
+        1.3.6.2.2.3. How to properly use manual
+      </h6>
+
+      <p>
+        When calling the function you have to tell manual the name of the OS.
+        While it requires the spelling to be correct, manual isn&apos;t case
+        sensitive.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token comment">#Lets go through every OS supported</span>
+<span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#This will make using manual easier to call</span>
+manual <span class="token operator">=</span> inp<span class="token punctuation">.</span>otherFunc<span class="token punctuation">.</span>clearScreen<span class="token punctuation">.</span>manual
+
+<span class="token comment">#Windows</span>
+manual<span class="token punctuation">(</span>OS<span class="token operator">=</span><span class="token string">&apos;Windows&apos;</span><span class="token punctuation">)</span>
+
+<span class="token comment">#MacOS</span>
+manual<span class="token punctuation">(</span>OS<span class="token operator">=</span><span class="token string">&apos;MACOS&apos;</span><span class="token punctuation">)</span>
+
+<span class="token comment">#Linux based systems</span>
+manual<span class="token punctuation">(</span>OS<span class="token operator">=</span><span class="token string">&apos;linux&apos;</span><span class="token punctuation">)</span>
+
+<span class="token comment">#This will raise an error</span>
+manual<span class="token punctuation">(</span>OS<span class="token operator">=</span><span class="token string">&apos;WindowsOS&apos;</span><span class="token punctuation">)</span>
+
+<span class="token comment">#This too will raise an error</span>
+manual<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</pre>
+      <h2 class="mume-header" id="14-todo">1.4. TODO</h2>
+
+      <p>
+        This will be some things to expect to happen as Input API gets more
+        updates. With some coming in the next major update, others in the minor
+        updates.
+      </p>
+      <h3 class="mume-header" id="141-in-major-updates">
+        1.4.1. In Major Updates
+      </h3>
+
+      <p>
+        These will be added in the next major updates, some may appear in the
+        same, others might be the only change.
+      </p>
+      <p>
+        NOTE: These ideas are in no order whatsoever, any combination of when
+        these will be added is possible
+      </p>
+      <h4 class="mume-header" id="1411-pre-set-inputs">
+        1.4.1.1. Pre-set Inputs
+      </h4>
+
+      <p>
+        Pre-set Inputs will be a way to have a series of inputs with the
+        parameters set. A file with inputs could be read by the Input API and
+        saved as a readable file or a compressed format to save on space. There
+        will also be some built-in formats to make easier inputs too. This will
+        be compatible with both older and more recent updates.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#So instead of having something like this</span>
+inp<span class="token punctuation">.</span>numeric<span class="token punctuation">.</span>newLineFloat<span class="token punctuation">(</span><span class="token string">&apos;Gimmie a number:&apos;</span><span class="token punctuation">)</span>
+inp<span class="token punctuation">.</span>boolean<span class="token punctuation">.</span>yesNo<span class="token punctuation">(</span><span class="token string">&apos;Are you sure?&apos;</span><span class="token punctuation">)</span>
+
+<span class="token comment">#You could</span>
+fileInput <span class="token operator">=</span> inp<span class="token punctuation">.</span>presets<span class="token punctuation">.</span>readFrom<span class="token punctuation">(</span><span class="token string">&apos;/File.ext&apos;</span><span class="token punctuation">)</span> <span class="token comment">#File extension will be given (.ext isn&apos;t it)</span>
+fileInput<span class="token punctuation">.</span>getNumber<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">#Or maybe</span>
+inp<span class="token punctuation">.</span>presets<span class="token punctuation">.</span>number<span class="token punctuation">.</span>intWithConfirm<span class="token punctuation">(</span><span class="token string">&apos;Gimmie a number&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;Are you sure?&apos;</span><span class="token punctuation">)</span> <span class="token comment">#This is not a guarantee to be added to presets (At least not in this exact way)</span>
+</pre>
+      <h4 class="mume-header" id="1412-iterable-inputs">
+        1.4.1.2. Iterable Inputs
+      </h4>
+
+      <p>
+        This update will allow input for multiple elements of a list or array.
+        This will allow multiple types of inputs in one.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#This could be how the input could be used</span>
+inp<span class="token punctuation">.</span>iterables<span class="token punctuation">.</span><span class="token builtin">list</span><span class="token punctuation">.</span>newLineList<span class="token punctuation">(</span><span class="token punctuation">)</span>
+inp<span class="token punctuation">.</span>iterables<span class="token punctuation">.</span><span class="token builtin">tuple</span><span class="token punctuation">.</span>sameLineTuple<span class="token punctuation">(</span><span class="token punctuation">)</span>
+inp<span class="token punctuation">.</span>iterables<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">.</span>newLineSet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</pre>
+      <h4 class="mume-header" id="1413-a-config-function">
+        1.4.1.3. A Config Function
+      </h4>
+
+      <p>
+        This function will allow you to determine multiple factors throughout
+        Input API, maybe relax some restrictions or make some more strict. More
+        power will be given to you when receiving input when this comes to
+        existence.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#Could be this</span>
+inp<span class="token punctuation">.</span>config<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">#Maybe this</span>
+inp<span class="token punctuation">.</span>strings<span class="token punctuation">.</span>config<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">#Or this</span>
+inp<span class="token punctuation">.</span>config<span class="token punctuation">.</span>var <span class="token operator">=</span> <span class="token punctuation">{</span>Var<span class="token punctuation">}</span>
+
+<span class="token comment">#There is some other things tht could be how config works but this is still possible</span>
+</pre>
+      <h4 class="mume-header" id="1414-call-laterrepeat-input">
+        1.4.1.4. Call later/repeat input
+      </h4>
+
+      <p>
+        This update will allow you to have a set of inputs within the script to
+        be called over time and not when the line is read.
+      </p>
+      <pre
+        data-role="codeBlock"
+        data-info="python"
+        class="language-python"
+      ><span class="token keyword keyword-import">import</span> inputapi <span class="token keyword keyword-as">as</span> inp
+
+<span class="token comment">#So instead of input being here</span>
+inp<span class="token punctuation">.</span>strings<span class="token punctuation">.</span>newLineStr<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#This is the input *function*</span>
+
+<span class="token comment">#You could save it</span>
+<span class="token builtin">input</span> <span class="token operator">=</span> inp<span class="token punctuation">.</span>strings<span class="token punctuation">.</span>NewLineStr<span class="token punctuation">(</span><span class="token punctuation">{</span>params<span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment">#This could be a class (Name is a placeholder)</span>
+
+<span class="token comment">#Then call it later</span>
+<span class="token keyword keyword-if">if</span> __name__ <span class="token operator">==</span> <span class="token string">&apos;__main__&apos;</span><span class="token punctuation">:</span>
+  <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token comment">#Or repeat the input</span>
+  <span class="token keyword keyword-while">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+    user <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span>
+    <span class="token keyword keyword-if">if</span> user <span class="token operator">==</span> <span class="token string">&apos;Quit&apos;</span><span class="token punctuation">:</span>
+      <span class="token keyword keyword-break">break</span>
+</pre>
+      <h3 class="mume-header" id="142-in-minor-updates">
+        1.4.2. In Minor Updates
+      </h3>
+
+      <p>These updates will be added between major updates or with them.</p>
+      <h4 class="mume-header" id="1421-new-multiselect-menu-types">
+        1.4.2.1. New multiSelect Menu Types
+      </h4>
+
+      <p>
+        There will be new multiSelect menu types for both returnSelected and
+        returnDeselected. These types will be from the singleSelect menus.
+      </p>
+      <h4 class="mume-header" id="1422-new-singleselect-menu-type">
+        1.4.2.2. New singleSelect Menu Type
+      </h4>
+
+      <p>
+        There will be a new singleSelect menu type that will be exclusive to
+        singleSelect. This will have the same output as a multiSelect menu but
+        won&apos;t let you select multiple.
+      </p>
+      <h4 class="mume-header" id="1423-adding-a-changelog">
+        1.4.2.3. Adding A Changelog
+      </h4>
+
+      <p>
+        There will be a changelog that will list every change from 1.0.0 to the
+        latest update. This will be publicly available to all distributions and
+        to the GitHub repository.
+      </p>
+      <hr class="footnotes-sep" />
+      <section class="footnotes">
+        <ol class="footnotes-list">
+          <li id="fn1" class="footnote-item">
+            <p>
+              clearScreen is does not need any information about the OS to
+              work<sup class="footnote-ref"
+                ><a href="#fn4" id="fnref4">[4]</a></sup
+              ><br />
+              It will automatically tell what OS is running the code and use the
+              command used by the OS to clear the terminal
+              <a href="#fnref1" class="footnote-backref">&#x21A9;&#xFE0E;</a>
+            </p>
+          </li>
+          <li id="fn2" class="footnote-item">
+            <p>
+              Fun Fact&apos;s although being labeled as &quot;Fun&quot; is more
+              fact than fun and could be a &quot;Sad Fact&quot; depending on the
+              fact!
+              <a href="#fnref2" class="footnote-backref">&#x21A9;&#xFE0E;</a>
+            </p>
+          </li>
+          <li id="fn3" class="footnote-item">
+            <p>
+              Not everything, just what takes input, clearScreen and pause
+              don&apos;t rely on it working to function
+              <a href="#fnref3" class="footnote-backref">&#x21A9;&#xFE0E;</a>
+            </p>
+          </li>
+          <li id="fn4" class="footnote-item">
+            <p>
+              Feature is only supported on Windows, MacOS, and Linux based
+              systems
+              <a href="#fnref4" class="footnote-backref">&#x21A9;&#xFE0E;</a>
+            </p>
+          </li>
+        </ol>
+      </section>
+    </div>
+  </body>
+</html>
