@@ -15,3 +15,4 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 license = "CC-BY-NC-SA-4.0"
+urls = { github = 'https://github.com/TheRedBasic/Input-API' }
