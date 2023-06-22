@@ -47,6 +47,13 @@ def numericSerial(
         list: The *args that were selected by the user
     """  # noqa: E501
 
+    if len(args) == 0:
+        if allowNoSelection:
+            return args
+        raise SyntaxError(
+            "No selectable options, give at least [1] option or set allowNoSelection to True"  # noqa: E501
+        )
+
     if clearOnLoad:
         clearScreen.auto()
 
