@@ -24,6 +24,9 @@ def numericSerial(
         int: What the user selected
     """  # noqa: E501
 
+    if len(args) == 0:
+        raise SyntaxError('*args has [0] value(s), [1] or more values is needed.')
+
     if clearOnLoad:
         _clearScreen.auto()
 
