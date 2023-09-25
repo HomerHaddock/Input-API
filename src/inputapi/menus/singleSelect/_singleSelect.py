@@ -1,18 +1,63 @@
+from typing import Generator, Iterator
 from ...otherFunc import clearScreen as _clearScreen
 from ...numerical.integer import newLineInt as _newLineInt
 from ...strings import newLineStr as _newLineStr
 
 
+def _menuLogic(
+    *options,
+    displayCharacters: str = "0123456789",
+    start: str = "1",
+    title: str = "Menu",
+) -> str:
+    def getChar(displayCharacters: str, start: str) -> Iterator[str]:
+        index = [displayCharacters.index(i) for i in start]
+        index.reverse()
+        index[0] -= 1
+        while True:
+            if index[-1] >= len(displayCharacters) - 1:
+                index.append(0)
+            index[0] += 1
+            for i, _ in enumerate(index):
+                if index[i] >= len(displayCharacters):
+                    index[i] = 0
+                    index[i + 1] += 1
+            display = "".join([displayCharacters[i] for i in index])[::-1]
+            yield display
+
+    if len(options) == 0:
+        raise SyntaxError("*options has [0] value(s), [1] or more values is needed.")
+
+    if title != "":
+        print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
+
+    display = getChar(displayCharacters, start)
+    selectable = set()
+    for option in options:
+        print("%s: %s" % (next(display), option))
+
+    print()
+
+    while True:
+        user = _newLineStr(
+            "To select an option enter the value next to it:",
+            minLength=1,
+            allowOnly=displayCharacters,
+        )
+        if user in selectable:
+            return user
+
+
 def numericSerial(
-    *args,
+    *options,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
-    title: str = "Menu"
+    title: str = "Menu",
 ) -> int:
     """A menu for the single selection of a user
 
-    A list of options supplied through *args for the user to select.
-    Every option is given a number from 1 to length of *args.
+    A list of options supplied through *options for the user to select.
+    Every option is given a number from 1 to length of *options.
     What is returned is what the user selected.
 
     Args:
@@ -24,8 +69,8 @@ def numericSerial(
         int: What the user selected
     """  # noqa: E501
 
-    if len(args) == 0:
-        raise SyntaxError('*args has [0] value(s), [1] or more values is needed.')
+    if len(options) == 0:
+        raise SyntaxError("*options has [0] value(s), [1] or more values is needed.")
 
     if clearOnLoad:
         _clearScreen.auto()
@@ -36,7 +81,7 @@ def numericSerial(
     # All serials will begin at 1 and increase by 1 every loop (Sorta like a factory)
     serial = 1
     options = []
-    for arg in args:
+    for arg in options:
         print("%s: %s" % (serial, arg))
         options.append(serial)
         serial += 1
@@ -45,8 +90,7 @@ def numericSerial(
 
     chosen = False
     while not chosen:
-        user = _newLineInt(
-            "To select an option input the number assigned to it:")
+        user = _newLineInt("To select an option input the number assigned to it:")
         chosen = user in options
 
     if clearWhenDone:
@@ -56,15 +100,15 @@ def numericSerial(
 
 
 def numericIndex(
-    *args,
+    *options,
     clearOnLoad: bool = False,
     clearWhenDone: bool = False,
-    title: str = "Menu"
+    title: str = "Menu",
 ) -> int:
     """numericIndex is a neumeric menu starting at 0
 
     In similar fashion as menu and numericSerial this is a number based selection menu.
-    All options are given a number between 0 and length of *args minus 1.
+    All options are given a number between 0 and length of *options minus 1.
     What is returned is the number given to the option.
 
     Args:
@@ -75,7 +119,7 @@ def numericIndex(
     Returns:
         int: The number to be assigned to the selected option
     """  # noqa: E501
-    
+
     if clearOnLoad:
         _clearScreen.auto()
 
@@ -85,7 +129,7 @@ def numericIndex(
     # Instead of a serial number it will give it as an index
     index = 0
     options = []
-    for arg in args:
+    for arg in options:
         print("%s: %s" % (index, arg))
         options.append(index)
         index += 1
@@ -94,8 +138,7 @@ def numericIndex(
 
     chosen = False
     while not chosen:
-        user = _newLineInt(
-            "To select an option input the number assigned to it:")
+        user = _newLineInt("To select an option input the number assigned to it:")
         chosen = user in options
 
     if clearWhenDone:
@@ -105,10 +148,10 @@ def numericIndex(
 
 
 def alphabetical(
-    *args,
-    clearOnLoad: bool = False, 
+    *options,
+    clearOnLoad: bool = False,
     clearWhenDone: bool = False,
-    title: str = "Menu"
+    title: str = "Menu",
 ) -> str:
     """alphabetical is a menu that assigns options with the Modern Latin Alphabet
 
@@ -127,7 +170,7 @@ def alphabetical(
     Returns:
         str: The characters assigned to an option.
     """  # noqa: E501
-    
+
     if clearOnLoad:
         _clearScreen.auto()
 
@@ -166,7 +209,7 @@ def alphabetical(
         print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
 
     options = []
-    for arg in args:
+    for arg in options:
         option = ""
         for i in index:
             option += letters[i]
@@ -177,12 +220,12 @@ def alphabetical(
                 if index[0] >= 26:
                     index[0] = 0
                     index.insert(0, 0)
-                for i,j in enumerate(index):
+                for i, j in enumerate(index):
                     if j >= 26:
                         index[i] = 0
-                        index[i-1] += 1
+                        index[i - 1] += 1
         if option in options:
-            raise ValueError('Generated option was given pre-existant indentifier')
+            raise ValueError("Generated option was given pre-existant indentifier")
         options.append(option)
 
     print()
@@ -193,7 +236,7 @@ def alphabetical(
             "To select an option input the letters next to it:",
             minLength=1,
             maxLength=len(letters),
-            allowOnly=''.join(letters) + ''.join([x.lower() for x in letters]),
+            allowOnly="".join(letters) + "".join([x.lower() for x in letters]),
         ).upper()
         chosen = user in options
 
