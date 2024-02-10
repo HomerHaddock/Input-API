@@ -3,15 +3,14 @@ from ...otherFunc import clearScreen
 import logging
 
 
-def floatHandle(
+def _floatHandle(
     input: str, allowNeg: bool, min: float | None, max: float | None
 ) -> float | bool:  # noqa: E501
-    
     # Negative handler (e.g. --2 -> 2 or 2- -> -2)
     negCount = input.count("-")
     input = input.replace("-", "")
     input = "-" + input if negCount % 2 else input
-    
+
     # Decimal handler (e.g. 2.2.2 -> 2.220 or 2 -> 2.0)
     inputSplit = input.split(".")
     inputSplit.insert(1, ".")
@@ -79,8 +78,10 @@ def newLineFloat(
         user = _strings.sameLineStr(
             ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
-        if type(number:=floatHandle(user, allowNeg, min, max)) is float:
-            user = number
+
+        check = _floatHandle(user, allowNeg, min, max)
+        if isinstance(check, float):
+            user = check
             validInput = True
 
     if clearWhenDone:
@@ -114,7 +115,7 @@ def sameLineFloat(
     Returns:
         float: The input the user gave
     """  # noqa: E501
-    
+
     if clearOnLoad:
         clearScreen.auto()
 
@@ -132,8 +133,10 @@ def sameLineFloat(
         user = _strings.sameLineStr(
             request, minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
-        if type(number:=floatHandle(user, allowNeg, min, max)) is float:
-            user = number
+
+        check = _floatHandle(user, allowNeg, min, max)
+        if isinstance(check, float):
+            user = check
             validInput = True
 
     if clearWhenDone:

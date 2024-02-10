@@ -1,24 +1,28 @@
 import logging as _logging
 from ... import strings as _strings, otherFunc as _otherFunc
 
-def intHandle(input:str, allowNeg:bool, min:int|None, max:int|None) -> int|bool:
-    negCount:int = input.count('-')
-    input:str = input.replace('-', "")
-    input:str = '-' + input if negCount % 2 else input
 
-    inputInt:int = int(input)
-    
+def _intHandle(
+    input: str, allowNeg: bool, min: int | None, max: int | None
+) -> int | bool:
+    negCount: int = input.count("-")
+    input: str = input.replace("-", "")
+    input: str = "-" + input if negCount % 2 else input
+
+    inputInt: int = int(input)
+
     if min is not None:
         if inputInt < min:
             _logging.warning("Number [%s] below minimum [%s]" % (input, min))
             return False
-    
+
     if max is not None:
         if inputInt > max:
             _logging.warning("Number [%s] above maximum [%s]" % (input, max))
             return False
-    
+
     return inputInt
+
 
 def newLineInt(
     request: str = "Input an integer:",
@@ -45,7 +49,7 @@ def newLineInt(
     Returns:
         int: The input given by the user
     """  # noqa: E501
-    
+
     if clearOnLoad:
         _otherFunc.clearScreen.auto()
 
@@ -66,9 +70,10 @@ def newLineInt(
         user = _strings.sameLineStr(
             ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
-        
-        if type(result:=intHandle(user, allowNeg, min, max)) is int:
-            user = result
+
+        check = _intHandle(user, allowNeg, min, max)
+        if isinstance(check, int):
+            user = check
             validInput = True
 
     if clearWhenDone:
@@ -119,9 +124,10 @@ def sameLineInt(
         user = _strings.sameLineStr(
             ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
-        
-        if type(result:=intHandle(user, allowNeg, min, max)) is int:
-            user = result
+
+        check = _intHandle(user, allowNeg, min, max)
+        if isinstance(check, int):
+            user = check
             validInput = True
 
     if clearWhenDone:
