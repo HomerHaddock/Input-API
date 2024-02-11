@@ -129,6 +129,7 @@ def sameLineFloat(
         maxInput = len(str(max))
 
     validInput = False
+    request = ">" if not request else request
     while validInput is not True:
         user = _strings.sameLineStr(
             request, minLength=minInput, maxLength=maxInput, allowOnly=allow
