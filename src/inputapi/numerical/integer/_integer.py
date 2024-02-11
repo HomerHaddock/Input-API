@@ -120,9 +120,10 @@ def sameLineInt(
         maxInput = len(str(max))
 
     validInput = False
+    request = ">" if not request else request
     while validInput is not True:
         user = _strings.sameLineStr(
-            ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
+            request, minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
 
         check = _intHandle(user, allowNeg, min, max)
