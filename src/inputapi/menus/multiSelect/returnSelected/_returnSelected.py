@@ -62,12 +62,13 @@ def numericSerial(
         options = list(args)
         selected = -1
         while selected != 0:
-            print()
+            display = "\n"
             if cleanOnRefresh:
+                display = ""
                 clearScreen.auto()
 
             if title != "":
-                print("\u001b[30m\u001b[47m---%s---\u001b[0m" % title)
+                display += "\u001b[30m\u001b[47m---%s---\u001b[0m" % title
 
             serial = 0
             for arg in args:
@@ -75,14 +76,14 @@ def numericSerial(
                     continue
                 serial += 1
                 if arg not in options:
-                    print("%s: *%s" % (serial, arg))
+                    display += "\n%s: *%s" % (serial, arg)
                     continue
-                print("%s: %s" % (serial, arg))
-            print("0: Done")
+                display += "\n%s: %s" % (serial, arg)
+            display += "\n0: Done"
 
-            print()  # Creates space between the options and the input
+            display += "\n"  # Creates space between the options and the input
             selected = integer.newLineInt(
-                "Multiple selection menu\nTo select an option input the number next to it:",  # noqa: E501
+                display + "\nMultiple selection menu\nTo select an option input the number next to it:",  # noqa: E501
                 allowNeg=False,
                 min=0,
                 max=serial,
@@ -102,9 +103,8 @@ def numericSerial(
             continue
 
         if confirmChoice:
-            print()
             confirmed = yesNo(
-                ("%s\nConfirm choice?" %
+                ("\n%s\nConfirm choice?" %
                  ([i for i in args if i not in options]))
                 .replace("'", "")
                 .replace("[", "")

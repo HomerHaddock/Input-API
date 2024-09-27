@@ -28,24 +28,22 @@ def yesNo(
     if clearOnLoad:
         _clearScreen()
 
-    if request != "":
-        print(request)
-
     display = ["y", "n"]
-    if default != None:
+    if default is not None:
         default = "yn".index(default.lower()) if isinstance(default, str) else default
         display[default] = display[default].capitalize()
     display = tuple(display)
 
     allowedInput = ["Y", "N", "y", "n"]
+    numericMessage = ""
     if allowNumeric:
-        print("Numeric response allowed (%s=1, %s=2)" % display)
+        numericMessage = "Numeric response allowed (%s=1, %s=2)\n" % display
         allowedInput.append("1")
         allowedInput.append("2")
 
     query = _sameLineStr(
-        "[%s/%s]:" % display,
-        minLength=0 if default != None else 1,
+        "%s%s[%s/%s]:" % (request + "\n" if request else "", numericMessage, *display),
+        minLength=0 if default is not None else 1,
         maxLength=1,
         allowOnly="".join(allowedInput),
     )
