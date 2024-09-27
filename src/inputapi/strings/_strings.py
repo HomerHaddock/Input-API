@@ -1,13 +1,14 @@
-from ..otherFunc import clearScreen
 import logging
+
+from ..otherFunc import clearScreen
 
 
 def allowedDisplayHandler(allowOnly: str) -> str:
     length: int = len(allowOnly)
-    allowOnlyList:list = list(allowOnly)
+    allowOnlyList: list[str] = list(allowOnly)
 
     if length < 20:
-        string = '%s' % (allowOnlyList)
+        string = "%s" % (allowOnlyList)
         return string.replace("[", "").replace("]", "")
     elif length > 25:
         string = "%s ... %s" % (allowOnlyList[:15], allowOnlyList[-5:])
@@ -16,14 +17,16 @@ def allowedDisplayHandler(allowOnly: str) -> str:
         string = "%s ... %s" % (allowOnlyList[:15], allowOnlyList[-1])
         return string.replace("[", "").replace("]", "")
 
-def allowOnlyIterate(char:str, allowed:str)-> bool:
 
+def allowOnlyIterate(char: str, allowed: str) -> bool:
     if char not in allowed:
         logging.warning(
-                    "Input has invalid character [%s], allowed characters are [%s]" % (char, allowedDisplayHandler(allowed))  # noqa: E501
-                )
+            "Input has invalid character [%s], allowed characters are [%s]"
+            % (char, allowedDisplayHandler(allowed))  # noqa: E501
+        )
         return False
     return True
+
 
 def stringValidationCheck(
     input: str,
@@ -33,7 +36,7 @@ def stringValidationCheck(
 ) -> bool:
     length: int = len(input)
 
-    message = dict()
+    message: dict[str, int | str] = dict()
 
     if maxLength:
         if length > maxLength:
@@ -52,7 +55,7 @@ def stringValidationCheck(
             % message
         )
         return False
-    
+
     allValid = True
     if allowOnly:
         for x in input:
@@ -60,7 +63,6 @@ def stringValidationCheck(
             allValid = valid and allValid
             if not allValid:
                 break
-                
 
     return allValid
 
@@ -78,17 +80,17 @@ def newLineStr(
         clearScreen.auto()
 
     if request != "":
-        print(request)
+        request += "\n>"
+    else:
+        request = ">"
 
     run = True
     while run:
-        user = input(">")
+        user = input(request)
 
         valid = stringValidationCheck(user, minLength, maxLength, allowOnly)
         if valid is True:
             run = False
-        else:
-            continue
 
     if clearWhenDone:
         clearScreen.auto()
@@ -121,7 +123,7 @@ def sameLineStr(
     if clearWhenDone:
         clearScreen.auto()
 
-    return user # type: ignore
+    return user  # type: ignore
 
 
 __all__ = ["newLineStr", "sameLineStr"]

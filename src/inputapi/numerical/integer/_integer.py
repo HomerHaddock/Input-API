@@ -53,8 +53,9 @@ def newLineInt(
     if clearOnLoad:
         _otherFunc.clearScreen.auto()
 
+    display = ""
     if request != "":
-        print(request)
+        display = request
 
     allow = "0123456789"
     if allowNeg:
@@ -68,7 +69,7 @@ def newLineInt(
     validInput = False
     while validInput is not True:
         user = _strings.sameLineStr(
-            ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
+            display + "\n>", minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
 
         check = _intHandle(user, allowNeg, min, max)

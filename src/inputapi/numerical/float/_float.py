@@ -70,13 +70,14 @@ def newLineFloat(
     if max is not None:
         maxInput = len(str(max))
 
+    display = ""
     if request != "":
-        print(request)
+        display = request
 
     validInput = False
     while validInput is not True:
         user = _strings.sameLineStr(
-            ">", minLength=minInput, maxLength=maxInput, allowOnly=allow
+            display + "\n>", minLength=minInput, maxLength=maxInput, allowOnly=allow
         )
 
         check = _floatHandle(user, allowNeg, min, max)
