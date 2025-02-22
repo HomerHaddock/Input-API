@@ -73,7 +73,7 @@ def newLineInt(
         )
 
         check = _intHandle(user, allowNeg, min, max)
-        if isinstance(check, int):
+        if not isinstance(check, bool):
             user = check
             validInput = True
 
@@ -128,7 +128,7 @@ def sameLineInt(
         )
 
         check = _intHandle(user, allowNeg, min, max)
-        if isinstance(check, int):
+        if not isinstance(check, bool):
             user = check
             validInput = True
 
