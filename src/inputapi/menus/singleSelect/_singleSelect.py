@@ -1,6 +1,4 @@
-from typing import Generator
-
-from typing_extensions import Sequence
+from typing import Generator, Sequence
 
 from ...numerical.integer import newLineInt as _newLineInt
 from ...otherFunc import clearScreen as _clearScreen
